@@ -1,0 +1,118 @@
+
+
+/*
+filename: Minh Thu Nguyen
+author: Minh Thu Nguyen
+created: 03/2022
+last modified: 03/2022
+*/
+
+/* footer*/
+		footer {	
+			background-color: grey;
+			padding:10px;
+		}
+		
+.line{
+			fill:none;
+			stroke: slategrey;
+			stroke-width:0.5;
+}
+
+
+@font-face{
+	font-family: myFont;
+	src: url('https://fonts.gstatic.com/s/fjallaone/v13/Yq6R-LCAWCX3-6Ky7FAFrOF6kg.woff2');
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: myFont;
+}
+
+.heading {
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/38816/image-from-rawpixel-id-2210775-jpeg.jpg") center center no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+
+}
+
+.contact-us {
+  background: #f8f4e5;
+  padding: 50px 100px;
+  border: 2px solid black;
+  box-shadow: 15px 15px 1px #ffa580, 15px 15px 1px 2px black;
+}
+
+select {
+  display: block;
+  font-size: 14pt;
+  line-height: 28pt;
+  margin-bottom: 28pt;
+  border: none;
+  border-bottom: 5px solid black;
+  background: #f8f4e5;
+  width: 70px;
+  padding-left: 5px;
+  outline: none;
+  color: black;
+
+}
+
+
+button, a {
+  text-decoration:none;
+  color: black;
+  margin: 20px;
+  line-height: 28pt;
+  padding: 10px 20px;
+  background: #ffa580;
+  letter-spacing: 2px;
+  transition: 0.2s all ease-in-out;
+  outline: none;
+  border: 1px solid black;
+  box-shadow: 3px 3px 1px #95a4ff, 3px 3px 1px 1px black;
+}
+button:hover, a:hover {
+  background: black;
+  color: white;
+  border: 1px solid black;
+}
+
+::selection {
+  background: #ffc8ff;
+}
+
+.graph1 {
+  background:#ffc8ff;
+  background-size: cover;
+  width: 100%;
+  //margin: 50px 50px 0px 50px;
+  display: grid;
+  margin-left:auto;
+  margin-right:auto;
+  align-items: center;
+  justify-items: center;
+  padding: 20px;
+}
+
+ .details p {opacity:1;}
+.details {
+            visibility: hidden;
+            width: 30%;
+	padding: 0px 0px 0px 30px;
+            height: 75%;
+            opacity: 0.7;
+            position: absolute;
+            background-color: aliceblue;
+            font-size: 20px;
+}
+#hide{
+    margin-right: 0;
+
+}
