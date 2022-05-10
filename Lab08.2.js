@@ -347,7 +347,7 @@ var tmp_color_array = [];
             .attr('width', 400)
             .attr('height', 35).attr('class',"meme");
 	pie_legends.selectAll('dotsss')
-   	 .data(['non-renewable energy','renewable energy'])
+   	 .data(['non-renewable energy','renewable energy   (Unit: GWh)'])
     	.enter()
     	.append("circle")
     	.attr("cx", (d,i) => 220 * i + 10) //pie_h + 100
@@ -391,7 +391,7 @@ else
           //----------------------
 
 
-          d3.select('.country').text("Energy generation in " + d.properties.STATE_NAME + " (Unit: GWh)");
+          d3.select('.country').text("Energy generation in " + d.properties.STATE_NAME);
 	
           
         
