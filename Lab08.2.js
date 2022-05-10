@@ -1,24 +1,26 @@
 var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
-  h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) * 0.75;
+  h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) * 0.6;
 
-var pie_w = w / 4; //set width and height for svg
+var pie_w = h / 2; //set width and height for svg
 var pie_h = pie_w;
 var year;
 var emptyArray = [];
 var pie_dataset = [];
+          var pie_color = d3.scaleOrdinal(d3.schemeCategory10); //d3 native scheme
 
-var color = d3.scaleQuantize().range([
+var color_range = [
   '#feebe2', //grey
   '#fbb4b9',
   '#f768a1',
   '#c51b8a',
   '#7a0177',
-]); //white
-
+];
+var color = d3.scaleQuantize().range(color_range); //white
+var svg;
 function init() {
   //Define quantize scale to sort data values into saturation of color
 
-  var svg = d3
+  svg = d3
     .select('#chart')
     .append('svg')
     .style('cursor', 'move')
@@ -39,6 +41,131 @@ function init() {
 
   var map = svg.append('g').attr('class', 'map');
 
+/*-------------Legends-----------------
+const new_stack = ["Recycling", "Energy recovery" , "Disposal", "m","m"];
+
+var size = 20;
+svg.selectAll("chart1_dots")
+    .data(new_stack)
+    .enter()
+    .append("circle")
+    .attr("cx", 3*w/4 - 20)
+    .attr("cy", (d,i) => 24 + i*(size)) 
+    .attr("r", 7)
+    .style("fill", (d,i) => color_range[i]);
+
+// Add one dot in the legend for each name.
+svg.selectAll("chart1_labels")
+    .data(new_stack)
+    .enter()
+    .append("text")
+    .attr("x", 3*w/4)
+    .attr("y", (d,i) => 22 + i*(size)) 
+    .text(d => d)
+    .style("fill", (d, i) => color_range[i])
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle");
+
+
+
+//Create a legend for the graph
+svg
+.append("rect")
+.attr("x",3*w/4 - 10)
+.attr("y", 42)
+.attr("height", color_range.length * 24)
+.attr("width", 7*17)
+.style("fill", "none")
+.style("stroke", "black");
+
+var size = 20;
+	svg.selectAll("chart1_labels")
+   	 .data(color_range)
+    	.enter()
+    	.append("rect")
+    	.attr("x", 3*w/4)
+    	.attr("y", (d,i) => 55 + i*(size)) 
+	.attr('width', 7).attr('height', 7 ).attr('stroke', 'black')
+      	.style("fill", (d, i) => color_range[i]);
+
+var chart1_legends = ["0-340 TWh","340-680 TWh","680-1020 TWh","1020-1360 TWh","1360-1700 TWh"];
+	svg.selectAll("chart1_legends")
+    	.data(chart1_legends)
+    	.enter()
+	.append("text")
+	.attr("x", 3*w/4 + 12)
+	.attr("y", (d,i) => 65 + i*(size))
+	.text(d => d)
+	.style("font-size", "15px");
+
+svg
+	.append("text")
+	.attr("x", 3*w/4 - 10)
+	.attr("y", 22)
+	.text("Legends")
+	.style("font-size", "20px")
+	.attr("alignment-baseline","middle")
+	.style("font-weight",1000);
+	
+
+-------------Legends-----------------*/
+
+
+
+
+
+//Create a legend for the graph
+svg
+.append("rect")
+.attr("x",3*w/4 - 10)
+.attr("y", 42)
+.attr("height", color_range.length * 18)
+.attr("width", 7*32)
+.style("fill", "none")
+.style("stroke", "black");
+
+var size = 20;
+	svg.selectAll("chart1_labels")
+   	 .data(color_range)
+    	.enter()
+    	.append("rect")
+    	.attr("x", (d,i) => 3*w/4 + 40*i)
+    	.attr("y", 55) 
+	.attr('width', 40)
+	.attr('height', 15).attr('stroke', 'black')
+      	.style("fill", (d, i) => color_range[i]);
+
+var chart1_legends = [0,1,2,3,4,5];
+
+svg.selectAll("chart1_labels")
+   	 .data(chart1_legends)
+    	.enter()
+	.append("text")
+	.attr("x",d => 3*w/4 + 36*d - 3)
+	.attr("y", 90)
+	.text(d => 340 * d)
+	.style("font-size", "15px");
+
+svg
+	.append("text")
+	.attr("x", 3*w/4 - 10)
+	.attr("y", 22)
+	.text("Legends")
+	.style("font-size", "20px")
+	.attr("alignment-baseline","middle")
+	.style("font-weight",1000);
+
+svg
+	.append("text")
+	.attr("x", 3*w/4 + 80)
+	.attr("y", 115)
+	.text("Unit: Terawatt hours")
+	.style("font-size", "15px");
+	
+	
+
+
+/*------------------Legends------------*/
   executeMap(map);
   filterYear(map);
 }
@@ -67,10 +194,10 @@ function executeMap(map) {
     }
 
     color.domain([
-      50, 1700,
+      0, 1700,
       // d3.min(emptyArray), //min for unemployed list value
       // d3.max(emptyArray), //max for unemployed list value
-    ]);
+    ]); console.log(color);
     //Load in GeoJSON data
     d3.json(
       'https://gist.githubusercontent.com/GerardoFurtado/02aa65e5522104cb692e/raw/8108fbd4103a827e67444381ff594f7df8450411/aust.json'
@@ -116,12 +243,15 @@ function executeMap(map) {
             d3.select('#text8').remove();
           }
           d3.select('#tooltop_nondata').remove();
+var remove_name = '#text' + d.properties.STATE_CODE;
+	d3.select(remove_name).remove();
 
+	
 	d3.select('.details').style('visibility', 'visible');
 
           map
             .append('text')
-            .attr('id', 'tooltip1')
+            .attr('class', 'tooltip1')
             .attr('fill', 'black')
             .attr('transform', 'translate(' + path.centroid(d) + ')')
             .attr('text-anchor', 'middle')
@@ -134,21 +264,22 @@ function executeMap(map) {
 
           //random dataset with 5 - 10 numbers: 6 numbers
 	            pie_dataset = [];
-while(!d3.select('#meme').empty())
+while(!d3.select('.meme').empty())
 {	 
-d3.select('#meme').remove();
+d3.select('.meme').remove();
 
 }
+	if (+d.properties.STATE_CODE<=7){
 
           /*--------Read file----------*/
-          d3.csv('data/Chart1_' + d.properties.STATE_CODE + '.csv').then(function (
+          d3.csv('data/Chart' + d.properties.STATE_CODE + '.csv').then(function (
             data
           ) {
 		            pie_dataset = [];
 
             //Set input domain for color scale
-            for (let i = 1; i <= 4; i++) {
-              pie_dataset.push(parseFloat(d3.entries(data[year-9])[i].value));
+            for (let i = 1; i <= 2; i++) {
+              pie_dataset.push(parseFloat(d3.entries(data[year-10])[i].value));
             }
           
 
@@ -160,10 +291,10 @@ d3.select('#meme').remove();
             .arc() //create angles for circle, segments of the pie chart
             .innerRadius(innerRadius) //set innerRadius
             .outerRadius(outerRadius); //set outterRadius
-while(!d3.select('#meme').empty())
+while(!d3.select('.meme').empty())
 {	 
-console.log(d3.select('#meme').empty());
-d3.select('#meme').remove();
+console.log(d3.select('.meme').empty());
+d3.select('.meme').remove();
 
 }
 
@@ -175,7 +306,7 @@ d3.select('#meme').remove();
             .select('#chart1_pie')
             .append('svg')
             .attr('width', pie_w)
-            .attr('height', pie_h).attr('id',"meme");
+            .attr('height', pie_h).attr('class',"meme");
 
           //Set up our arcs
           var arcs = pie_svg
@@ -195,8 +326,7 @@ d3.select('#meme').remove();
           //translate w/2, w/2 --> position of centroid
           //if (0,0) --> 1/4 pie chart is shown
 
-          var pie_color = d3.scaleOrdinal(d3.schemeCategory10); //d3 native scheme
-
+var tmp_color_array = [];
           //Draw arc paths
           arcs
             .append('path') //generate paths for the data bournd to the arcs group
@@ -211,6 +341,30 @@ d3.select('#meme').remove();
               } //call arc segment
             );
 
+ var pie_legends = d3
+            .select('#chart1_pie_legends')
+            .append('svg')
+            .attr('width', 400)
+            .attr('height', 35).attr('class',"meme");
+	pie_legends.selectAll('dotsss')
+   	 .data(['non-renewable energy','renewable energy'])
+    	.enter()
+    	.append("circle")
+    	.attr("cx", (d,i) => 220 * i + 10) //pie_h + 100
+    	.attr("cy", 20) //(d,i) => 150 + i*(40)
+    	.attr("r", 10)
+    	.style("fill", (d,i) => pie_color(i));
+
+	pie_legends.selectAll('legendssss')
+   	 .data(['non-renewable energy','renewable energy'])
+    	.enter()
+    	.append("text")
+    	.attr("x", (d,i) => 220 * i + 25) //pie_h + 100
+    	.attr("y", 28) //(d,i) => 150 + i*(40)
+   
+    	.text(d=>d);
+
+	
           //add label text
           arcs
             .append('text') //pie generator generates an array containing all path data and data value
@@ -219,23 +373,34 @@ d3.select('#meme').remove();
 		.text(function (d) {
               return d.value;
             }) //to access the value inside an array
-            .attr('transform', function (d) {
-              return 'translate(' + arc.centroid(d) + ')';
-            }); //by default, text is displayed at the centroid of the chart
+            .attr('transform', function (d) {console.log(arc.centroid(d) );
+              return 'translate(' + (arc.centroid(d)[0]-26) + ',' + arc.centroid(d)[1] + ')';
+            }).attr('font-size','20px'); //by default, text is displayed at the centroid of the chart
           // -> transform + arc.centroid to find the middle of an irregular shape.
           /*-----------Pie chart ----------------------*/
-});
+
+}).catch(function(error){
+    console.log(error);
+}); } 
+else 
+{
+	console.log("No data");
+            d3.select('.females').append("text").attr("id","tooltop_nondata").text("no data");
+
+};
           //----------------------
 
 
-          d3.select('.country').text(d.properties.STATE_NAME);
+          d3.select('.country').text("Energy generation in " + d.properties.STATE_NAME + " (Unit: GWh)");
 	
           
-          if (this.id == 'path8') {
-            d3.select('.females').append("text").attr("id","tooltop_nondata").text("Non-data");
-          }
+        
+  //if (this.id == 'path8') {
+          //}
 
-          
+         
+
+
 
           //-----------
         })
@@ -243,7 +408,7 @@ d3.select('#meme').remove();
         .on('mouseout', function (d) {
           d3.select(this).attr('stroke', 'white').attr('stroke-width', '1px');
 
-          d3.select('#tooltip1').remove();
+          d3.select('.tooltip1').remove();
 
           map
             .append('text')
@@ -253,7 +418,7 @@ d3.select('#meme').remove();
             .attr('dy', 15)
             .attr('id', 'text' + d.properties.STATE_CODE)
             .text(d.properties.STATE_NAME)
-            .style('font-size', '8px');
+            .style('font-size', '12px');
 	
 	
         });
@@ -278,7 +443,7 @@ d3.select('#meme').remove();
         .text(function (d) {
           return d.properties.STATE_NAME;
         })
-        .style('font-size', '8px');
+        .style('font-size', '12px');
 
       //----
       //-----
@@ -331,9 +496,9 @@ function hideButton()
 {
 	          d3.select('.details').transition().style("visibility","hidden");
 
-	while(!d3.select('#meme').empty())
+	while(!d3.select('.meme').empty())
 {	 
-d3.select('#meme').remove();
+d3.select('.meme').remove();
 
 }
 

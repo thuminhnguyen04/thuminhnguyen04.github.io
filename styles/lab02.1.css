@@ -32,7 +32,7 @@ last modified: 03/2022
 }
 
 .heading {
-  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/38816/image-from-rawpixel-id-2210775-jpeg.jpg") center center no-repeat;
+background-color: #f8f4d0;
   background-size: cover;
   width: 100%;
   height: 100vh;
@@ -92,27 +92,28 @@ button:hover, a:hover {
   background:#ffc8ff;
   background-size: cover;
   width: 100%;
-  //margin: 50px 50px 0px 50px;
+  margin: 0px 50px 0px 50px;
   display: grid;
   margin-left:auto;
   margin-right:auto;
   align-items: center;
   justify-items: center;
-  padding: 20px;
+  padding: 20px 20px 0 20px;
 }
 
- .details p {opacity:1;}
 .details {
             visibility: hidden;
-            width: 30%;
-	padding: 0px 0px 0px 30px;
-            height: 75%;
+            width: 25%;
+			padding: 20px 0px 0px 40px;
+            height: 58%;
             opacity: 0.7;
             position: absolute;
             background-color: aliceblue;
-            font-size: 20px;
+            font-size: 18px;
 }
-#hide{
-    margin-right: 0;
 
+#chart1_pie{
+	padding: 0px 0px 10px 0px;
 }
+
+.country { padding: 0px 0px 10px 0px;} 
