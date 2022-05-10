@@ -344,7 +344,7 @@ var tmp_color_array = [];
  var pie_legends = d3
             .select('#chart1_pie_legends')
             .append('svg')
-            .attr('width', 400)
+            .attr('width', 450)
             .attr('height', 35).attr('class',"meme");
 	pie_legends.selectAll('dotsss')
    	 .data(['non-renewable energy','renewable energy (Unit: GWh)'])
@@ -354,14 +354,14 @@ var tmp_color_array = [];
     	.attr("cy", 20) //(d,i) => 150 + i*(40)
     	.attr("r", 10)
     	.style("fill", (d,i) => pie_color(i));
-
+	
 	pie_legends.selectAll('legendssss')
    	 .data(['non-renewable energy','renewable energy (Unit: GWh)'])
     	.enter()
     	.append("text")
     	.attr("x", (d,i) => 220 * i + 25) //pie_h + 100
     	.attr("y", 28) //(d,i) => 150 + i*(40)
-   
+   .attr("font-size","15px")
     	.text(d=>d);
 
 	
