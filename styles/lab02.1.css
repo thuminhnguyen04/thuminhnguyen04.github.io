@@ -73,7 +73,6 @@ button, a {
   padding: 10px 20px;
   background: #ffa580;
   letter-spacing: 2px;
-  transition: 0.2s all ease-in-out;
   outline: none;
   border: 1px solid black;
   box-shadow: 3px 3px 1px #95a4ff, 3px 3px 1px 1px black;

@@ -232,9 +232,8 @@ function executeMap(map) {
           //Raise the state/territory and colour stroke red
 				for (let m=0;m<=10;m++)
         {
-       	 d3.select('#hide').style('visibility', 'hidden');
         }
-        
+
           d3.select(this)
             .attr('stroke', 'green')
             .attr('stroke-width', '1px')
@@ -275,12 +274,7 @@ function executeMap(map) {
 
           //random dataset with 5 - 10 numbers: 6 numbers
           pie_dataset = [];
-          while (!d3.select('.meme').empty()) {
-            d3.select('.meme').remove();
-                                d3.select('#hide').style('visibility', 'hidden');
-
-
-          }
+         
           if (+d.properties.STATE_CODE <= 7) {
 
             /*--------Read file----------*/
@@ -306,7 +300,6 @@ function executeMap(map) {
               while (!d3.select('.meme').empty()) {
                 console.log(d3.select('.meme').empty());
                 d3.select('.meme').remove();
-                    d3.select('#hide').style('visibility', 'hidden');
 
               }
 
@@ -391,12 +384,21 @@ function executeMap(map) {
                 }).attr('font-size', '20px'); //by default, text is displayed at the centroid of the chart
               // -> transform + arc.centroid to find the middle of an irregular shape.
               /*-----------Pie chart ----------------------*/
-                    d3.select('#hide').style('visibility', 'visible');
 
             }).catch(function(error) {
+ while (!d3.select('.meme').empty()) {
+            d3.select('.meme').remove();
+
+
+          }
               console.log(error);
             });
           } else {
+ while (!d3.select('.meme').empty()) {
+            d3.select('.meme').remove();
+
+
+          }
             console.log("No data");
             d3.select('.females').append("text").attr("id", "tooltop_nondata").text("no data");
 
@@ -506,6 +508,7 @@ function filterYear(map) {
 
 /*-------------On Click for hide --------------*/
 function hideButton() {
+
   d3.select('.details').transition().style("visibility", "hidden");
 
   while (!d3.select('.meme').empty()) {
