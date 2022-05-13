@@ -114,3 +114,7 @@ button:hover, a:hover {
 
 
 .country { padding: 0px 0px 10px 0px;} 
+
+#chart2 {padding: 20px;  text-align: center;
+		 margin-left: auto;
+    margin-right: auto;}
