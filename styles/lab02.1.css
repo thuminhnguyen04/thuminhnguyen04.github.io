@@ -20,15 +20,11 @@ last modified: 03/2022
 }
 
 
-@font-face{
-	font-family: myFont;
-	src: url('https://fonts.gstatic.com/s/fjallaone/v13/Yq6R-LCAWCX3-6Ky7FAFrOF6kg.woff2');
-}
 
 * {
   margin: 0;
   padding: 0;
-  font-family: myFont;
+  font-family: Arial;
 }
 
 .heading {
@@ -108,12 +104,18 @@ button:hover, a:hover {
             opacity: 0.7;
             position: absolute;
             background-color: aliceblue;
-            font-size: 18px;
+            font-size: 15px;
 }
 
 
 .country { padding: 0px 0px 10px 0px;} 
 
-#chart2 {padding: 20px;  text-align: center;
+#chart2{padding: 20px;  text-align: center;
 		 margin-left: auto;
     margin-right: auto;}
+
+button, h1{padding: 0px 12px 0px 12px; text-align: center;
+		 margin-left: auto;
+    margin-right: auto;}
+
+

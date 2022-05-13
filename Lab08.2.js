@@ -107,7 +107,7 @@ function init() {
   	.text("Legends")
   	.style("font-size", "20px")
   	.attr("alignment-baseline","middle")
-  	.style("font-weight",1000);
+  	.style("font-weight",800);
   	
 
   -------------Legends-----------------*/
@@ -216,7 +216,7 @@ function executeMap(map) {
         .attr('stroke', 'white')
         .attr('id', function(d, i) {
           return 'path' + (i + 1); // d.properties.STATE_NAME;
-        })
+        }).style("font-weight",600)
         .style('fill', function(d, i) {
           return color(emptyArray[i]);
           //get data value, just for convenience in processing
@@ -266,7 +266,7 @@ function executeMap(map) {
             .text(function(d) {
               if (emptyArray[i] == 0) return "!";
               else return emptyArray[i];
-            })
+            }).style("font-weight",600)
             //.text(d.properties.STATE_NAME + " \r\n" + emptyArray[i])
             .style('font-size', '20px');
 
@@ -355,7 +355,7 @@ function executeMap(map) {
                 .data(['non-renewable energy', 'renewable energy (Unit: GWh)'])
                 .enter()
                 .append("circle")
-                .attr("cx", (d, i) => 220 * i + 10) //pie_h + 100
+                .attr("cx", (d, i) => 200 * i + 10) //pie_h + 100
                 .attr("cy", 20) //(d,i) => 150 + i*(40)
                 .attr("r", 10)
                 .style("fill", (d, i) => pie_color(i));
@@ -364,7 +364,7 @@ function executeMap(map) {
                 .data(['non-renewable energy', 'renewable energy (Unit: GWh)'])
                 .enter()
                 .append("text")
-                .attr("x", (d, i) => 220 * i + 25) //pie_h + 100
+                .attr("x", (d, i) => 200 * i + 25) //pie_h + 100
                 .attr("y", 28) //(d,i) => 150 + i*(40)
                 .attr("font-size", "15px")
                 .text(d => d);
@@ -380,8 +380,8 @@ function executeMap(map) {
                 }) //to access the value inside an array
                 .attr('transform', function(d) {
                   console.log(arc.centroid(d));
-                  return 'translate(' + (arc.centroid(d)[0] - 26) + ',' + arc.centroid(d)[1] + ')';
-                }).attr('font-size', '20px'); //by default, text is displayed at the centroid of the chart
+                  return 'translate(' + (arc.centroid(d)[0] - 18) + ',' + arc.centroid(d)[1] + ')';
+                }).attr('font-size', '12px'); //by default, text is displayed at the centroid of the chart
               // -> transform + arc.centroid to find the middle of an irregular shape.
               /*-----------Pie chart ----------------------*/
 
@@ -432,8 +432,8 @@ function executeMap(map) {
             .attr('text-anchor', 'middle')
             .attr('dy', 15)
             .attr('id', 'text' + d.properties.STATE_CODE)
-            .text(d.properties.STATE_NAME)
-            .style('font-size', '12px');
+            .text(d.properties.STATE_NAME).style("font-weight",600)
+            .style('font-size', '10px');
 
 
         });
@@ -457,8 +457,8 @@ function executeMap(map) {
         .attr('dy', 15)
         .text(function(d) {
           return d.properties.STATE_NAME;
-        })
-        .style('font-size', '12px');
+        }).style("font-weight",600)
+        .style('font-size', '10px');
 
       //----
       //-----
@@ -546,8 +546,9 @@ function vis2_execution() {
 
 
     //read data
-    var vis2_w = w / 2;
-    var vis2_padding = 30;
+    var vis2_w = w * 0.5;
+    var vis2_h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) * 0.6;
+    var vis2_padding = 40;
     var vis2_maxValue = 25; // set max value for column	
     var vis2_numDataPoints = 20; //number of points
     var vis2_range = Math.random() * 1000; //range of data, random() will return double value from 0 to 1
@@ -569,7 +570,7 @@ function vis2_execution() {
         0,
         1100
       ]) //domain of y
-      .range([h - vis2_padding, vis2_padding]) // specify the size of the range the domain needs to be mapped 
+      .range([vis2_h - vis2_padding, vis2_padding]) // specify the size of the range the domain needs to be mapped 
     // round the bandwidths to whole number	
     // range of y 
 
@@ -579,7 +580,7 @@ function vis2_execution() {
     var vis2_svg = d3.select("#chart2")
       .append("svg")
       .attr("width", vis2_w)
-      .attr("height", h);
+      .attr("height", vis2_h);
 
     var vis2_xAxis = d3.axisBottom()
       .ticks(vis2_dataset.length) /*controlling the tick* - interval */
@@ -604,7 +605,7 @@ function vis2_execution() {
       }) /* value of y - positions*/
       .attr("width", vis2_xScale.bandwidth()) /* barpadding to create space bw each column*/
       .attr("height", function(d) {
-        return h - vis2_padding - vis2_yScale(d.Mean);
+        return vis2_h - vis2_padding - vis2_yScale(d.Mean);
       }) /* extend the height for an easy look*/
       .attr("fill", function(d) {if (+d.Mean>200) return "red"; return "green";})
 	.on("mouseover", function(d, i ) { //when the mouse hovers
@@ -619,7 +620,7 @@ function vis2_execution() {
 					vis2_svg.append("text")
 					   .attr("id", "vis2_tooltip")
 					   .attr("x", xPosition - (d.Mean.length/2)*4)
-					   .attr("y", function (){ if (yPosition > h - vis2_padding) return yPosition - 35; return yPosition;})
+					   .attr("y", function (){ if (yPosition > vis2_h - vis2_padding) return yPosition - 35; return yPosition;})
 					   .attr("font-weight", "bold")
 					   .text(d.Mean);
 			})
@@ -634,7 +635,7 @@ function vis2_execution() {
     /* shape color*/
 
     vis2_svg.append("g")
-      .attr("transform", "translate(0," + (h - vis2_padding) + ")") //position for x axis
+      .attr("transform", "translate(0," + (vis2_h - vis2_padding) + ")") //position for x axis
       .call(vis2_xAxis); //draw x axis
 
     vis2_svg.append("g")
@@ -680,6 +681,191 @@ function vis2_execution() {
 
 }
 
+
+//multiple
+//Varun Dewan 2019
+var $ = {
+   get: function(selector){ 
+      var ele = document.querySelectorAll(selector);
+      for(var i = 0; i < ele.length; i++){
+         this.init(ele[i]);
+      }
+      return ele;
+   },
+   template: function(html){
+      var template = document.createElement('div');
+      template.innerHTML = html.trim();
+      return this.init(template.childNodes[0]);
+   },
+   init: function(ele){
+      ele.on = function(event, func){ this.addEventListener(event, func); }
+      return ele;
+   }
+};
+
+//Build the plugin
+var drop = function(info){var o = {
+   options: info.options,
+   selected: info.selected || [],
+   preselected: info.preselected || [],
+   open: false,
+   html: {
+      select: $.get(info.selector)[0],
+      options: $.get(info.selector + ' option'),
+      parent: undefined,
+   },
+   init: function(){
+      //Setup Drop HTML
+      this.html.parent = $.get(info.selector)[0].parentNode
+      this.html.drop = $.template('<div class="drop"></div>')
+      this.html.dropDisplay = $.template('<div class="drop-display">Display</div>')
+      this.html.dropOptions = $.template('<div class="drop-options">Options</div>')
+      this.html.dropScreen = $.template('<div class="drop-screen"></div>')
+      
+      this.html.parent.insertBefore(this.html.drop, this.html.select)
+      this.html.drop.appendChild(this.html.dropDisplay)
+      this.html.drop.appendChild(this.html.dropOptions)
+      this.html.drop.appendChild(this.html.dropScreen)
+      //Hide old select
+      this.html.drop.appendChild(this.html.select);
+      
+      //Core Events
+      var that = this;
+      this.html.dropDisplay.on('click', function(){ that.toggle() });
+      this.html.dropScreen.on('click', function(){ that.toggle() });
+      //Run Render
+      this.load()
+      this.preselect()
+      this.render();
+   },
+   toggle: function(){
+      this.html.drop.classList.toggle('open');
+   },
+   addOption: function(e, element){ 
+      var index = Number(element.dataset.index);
+      this.clearStates()
+      this.selected.push({
+         index: Number(index),
+         state: 'add',
+         removed: false
+      })
+      this.options[index].state = 'remove';
+      this.render()
+   },
+   removeOption: function(e, element){
+      e.stopPropagation();
+      this.clearStates()
+      var index = Number(element.dataset.index);
+      this.selected.forEach(function(select){
+         if(select.index == index && !select.removed){
+            select.removed = true
+            select.state = 'remove'
+         }
+      })
+      this.options[index].state = 'add'
+      this.render();
+   },
+   load: function(){
+      this.options = [];
+      for(var i = 0; i < this.html.options.length; i++){
+         var option = this.html.options[i]
+         this.options[i] = {
+            html:  option.innerHTML,
+            value: option.value,
+            selected: option.selected,
+            state: ''
+         }
+      }
+   },
+   preselect: function(){
+      var that = this;
+      this.selected = [];
+      this.preselected.forEach(function(pre){
+         that.selected.push({
+            index: pre,
+            state: 'add',
+            removed: false
+         })
+         that.options[pre].state = 'remove';
+      })
+   },
+   render: function(){
+      this.renderDrop()
+      this.renderOptions()
+   },
+   renderDrop: function(){ 
+      var that = this;
+      var parentHTML = $.template('<div></div>')
+      this.selected.forEach(function(select, index){ 
+         var option = that.options[select.index];
+         var childHTML = $.template('<span class="item '+ select.state +'">'+ option.html +'</span>')
+         var childCloseHTML = $.template(
+            '<i class="material-icons btnclose" data-index="'+select.index+'">&#xe5c9;</i></span>')
+         childCloseHTML.on('click', function(e){ that.removeOption(e, this) })
+         childHTML.appendChild(childCloseHTML)
+         parentHTML.appendChild(childHTML)
+      })
+      this.html.dropDisplay.innerHTML = ''; 
+      this.html.dropDisplay.appendChild(parentHTML)
+   },
+   renderOptions: function(){  
+      var that = this;
+      var parentHTML = $.template('<div></div>')
+      this.options.forEach(function(option, index){
+         var childHTML = $.template(
+            '<a data-index="'+index+'" class="'+option.state+'">'+ option.html +'</a>')
+         childHTML.on('click', function(e){ that.addOption(e, this) })
+         parentHTML.appendChild(childHTML)
+      })
+      this.html.dropOptions.innerHTML = '';
+      this.html.dropOptions.appendChild(parentHTML)
+   },
+   clearStates: function(){
+      var that = this;
+      this.selected.forEach(function(select, index){ 
+         select.state = that.changeState(select.state)
+      })
+      this.options.forEach(function(option){ 
+         option.state = that.changeState(option.state)
+      })
+   },
+   changeState: function(state){
+      switch(state){
+         case 'remove':
+            return 'hide'
+         case 'hide':
+            return 'hide'
+         default:
+            return ''
+       }
+   },
+   isSelected: function(index){
+      var check = false
+      this.selected.forEach(function(select){ 
+         if(select.index == index && select.removed == false) check = true
+      })
+      return check
+   }
+}; o.init(); return o;}
+
+
+//Set up some data
+var options = [
+   { html: 'cats', value: 'cats' },
+   { html: 'fish', value: 'fish' },
+   { html: 'squids', value: 'squids' },
+   { html: 'cats', value: 'whales' },
+   { html: 'cats', value: 'bikes' },
+];
+
+var myDrop = new drop({
+   selector:  '#myMulti',
+   preselected: [0, 2]
+});
+ myDrop.toggle();
+
+
+//multiple
 
 
 
