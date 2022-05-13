@@ -606,7 +606,7 @@ function vis2_execution() {
       .attr("height", function(d) {
         return h - vis2_padding - vis2_yScale(d.Mean);
       }) /* extend the height for an easy look*/
-      .attr("fill", "grey")
+      .attr("fill", function(d) {if (+d.Mean>200) return "red"; return "green";})
 	.on("mouseover", function(d, i ) { //when the mouse hovers
 			   		d3.select(this)
 			   			.attr("fill", "orange"); //that column turns orange
@@ -619,7 +619,7 @@ function vis2_execution() {
 					vis2_svg.append("text")
 					   .attr("id", "vis2_tooltip")
 					   .attr("x", xPosition - (d.Mean.length/2)*4)
-					   .attr("y", function (){ if (yPosition > h - vis2_padding) return yPosition - 30; return yPosition;})
+					   .attr("y", function (){ if (yPosition > h - vis2_padding) return yPosition - 35; return yPosition;})
 					   .attr("font-weight", "bold")
 					   .text(d.Mean);
 			})
@@ -628,7 +628,7 @@ function vis2_execution() {
 						.transition() //smoother
 						.delay(100)
 						.duration(1000)
-						.attr("fill", "grey"); //that column turns back to default color
+						.attr("fill", function(d) {if (+d.Mean>200) return "red"; return "green";}); //that column turns back to default color
 					d3.select("#vis2_tooltip").remove(); //remove value of column when mouse no longer hovers
 		});
     /* shape color*/
@@ -641,6 +641,36 @@ function vis2_execution() {
       .attr("class", "y axis") //assign class for y axis
       .attr("transform", "translate(" + vis2_padding + ",0)") //position for y axis
       .call(vis2_yAxis); //draw y axis
+
+// Legendssssssssss
+
+              vis2_svg.selectAll('dotsss')
+                .data(['non-renewable energy', 'renewable energy (Unit: GWh)'])
+                .enter()
+                .append("circle")
+                .attr("cx", (d, i) => vis2_w - vis2_padding - 100) //pie_h + 100
+                .attr("cy", (d,i) => 50 + 30*i) //(d,i) => 150 + i*(40)
+                .attr("r", 8)
+                .style("fill", function(d,i) {if (i==1) return "green"; return "red";});
+
+              vis2_svg.selectAll('legendssss')
+                .data(['non-renewable energy', 'renewable energy'])
+                .enter()
+                .append("text")
+                .attr("x", vis2_w - vis2_padding + 20 -100) //pie_h + 100
+                .attr("y", (d, i) => 55 + 30 * i) //(d,i) => 150 + i*(40)
+                .attr("font-size", "12px")
+                .text(d => d);
+
+
+
+
+//Legends
+
+
+
+
+
   });
 
 
