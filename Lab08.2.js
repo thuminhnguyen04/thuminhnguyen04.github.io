@@ -1,6 +1,8 @@
 var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
-  h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) * 0.6;
- 
+  h =
+    Math.max(document.documentElement.clientHeight, window.innerHeight || 0) *
+    0.6;
+
 var pie_w = h / 2; //set width and height for svg
 var pie_h = pie_w;
 var year;
@@ -21,7 +23,7 @@ var svg;
 function init() {
   //Define quantize scale to sort data values into saturation of color
   vis2_execution();
-
+vis3_execution();
   svg = d3
     .select('#chart')
     .append('svg')
@@ -35,7 +37,7 @@ function init() {
   //.attr("height", h)
   //.attr("fill","grey"); //the area which is not the file will be colored the default color - grey
 
-  var zoom = d3.zoom().on('zoom', function() {
+  var zoom = d3.zoom().on('zoom', function () {
     var transform = d3.zoomTransform(this);
     map.attr('transform', transform);
   });
@@ -112,60 +114,56 @@ function init() {
 
   -------------Legends-----------------*/
 
-
-
-
-
   //Create a legend for the graph
   svg
-    .append("rect")
-    .attr("x", 3 * w / 4 - 10)
-    .attr("y", 42)
-    .attr("height", color_range.length * 18)
-    .attr("width", 7 * 32)
-    .style("fill", "none")
-    .style("stroke", "black");
+    .append('rect')
+    .attr('x', (3 * w) / 4 - 10)
+    .attr('y', 42)
+    .attr('height', color_range.length * 18)
+    .attr('width', 7 * 32)
+    .style('fill', 'none')
+    .style('stroke', 'black');
 
   var size = 20;
-  svg.selectAll("chart1_labels")
+  svg
+    .selectAll('chart1_labels')
     .data(color_range)
     .enter()
-    .append("rect")
-    .attr("x", (d, i) => 3 * w / 4 + 40 * i)
-    .attr("y", 55)
+    .append('rect')
+    .attr('x', (d, i) => (3 * w) / 4 + 40 * i)
+    .attr('y', 55)
     .attr('width', 40)
-    .attr('height', 15).attr('stroke', 'black')
-    .style("fill", (d, i) => color_range[i]);
+    .attr('height', 15)
+    .attr('stroke', 'black')
+    .style('fill', (d, i) => color_range[i]);
 
   var chart1_legends = [0, 1, 2, 3, 4, 5];
 
-  svg.selectAll("chart1_labels")
+  svg
+    .selectAll('chart1_labels')
     .data(chart1_legends)
     .enter()
-    .append("text")
-    .attr("x", d => 3 * w / 4 + 36 * d - 3)
-    .attr("y", 90)
+    .append('text')
+    .attr('x', d => (3 * w) / 4 + 36 * d - 3)
+    .attr('y', 90)
     .text(d => 340 * d)
-    .style("font-size", "15px");
+    .style('font-size', '15px');
 
   svg
-    .append("text")
-    .attr("x", 3 * w / 4 - 10)
-    .attr("y", 22)
-    .text("Legends")
-    .style("font-size", "20px")
-    .attr("alignment-baseline", "middle")
-    .style("font-weight", 1000);
+    .append('text')
+    .attr('x', (3 * w) / 4 - 10)
+    .attr('y', 22)
+    .text('Legends')
+    .style('font-size', '20px')
+    .attr('alignment-baseline', 'middle')
+    .style('font-weight', 1000);
 
   svg
-    .append("text")
-    .attr("x", 3 * w / 4 + 80)
-    .attr("y", 115)
-    .text("Unit: Terawatt hours")
-    .style("font-size", "15px");
-
-
-
+    .append('text')
+    .attr('x', (3 * w) / 4 + 80)
+    .attr('y', 115)
+    .text('Unit: Terawatt hours')
+    .style('font-size', '15px');
 
   /*------------------Legends------------*/
   executeMap(map);
@@ -188,7 +186,7 @@ function executeMap(map) {
     .projection(projection);
   //Load in agriculture data
   year = 10; //2009
-  d3.csv('data/Map_V4.csv').then(function(data) {
+  d3.csv('data/Map_V4.csv').then(function (data) {
     //Set input domain for color scale
     for (let i = 0; i < 9; i++) {
       emptyArray.push(parseFloat(d3.entries(data[year])[1 + i].value));
@@ -202,7 +200,7 @@ function executeMap(map) {
     //Load in GeoJSON data
     d3.json(
       'https://gist.githubusercontent.com/GerardoFurtado/02aa65e5522104cb692e/raw/8108fbd4103a827e67444381ff594f7df8450411/aust.json'
-    ).then(function(json) {
+    ).then(function (json) {
       //load file json
 
       map
@@ -212,10 +210,11 @@ function executeMap(map) {
         .append('path') //append path
         .attr('d', path) //set path to d
         .attr('stroke', 'white')
-        .attr('id', function(d, i) {
+        .attr('id', function (d, i) {
           return 'path' + (i + 1); // d.properties.STATE_NAME;
-        }).style("font-weight",600)
-        .style('fill', function(d, i) {
+        })
+        .style('font-weight', 600)
+        .style('fill', function (d, i) {
           return color(emptyArray[i]);
           //get data value, just for convenience in processing
           /*var value = d.properties.value;
@@ -226,11 +225,9 @@ function executeMap(map) {
             return '#ffd8d8';
           }*/
         })
-        .on('mouseover', function(d, i) {
+        .on('mouseover', function (d, i) {
           //Raise the state/territory and colour stroke red
-				for (let m=0;m<=10;m++)
-        {
-        }
+          for (let m = 0; m <= 10; m++) {}
 
           d3.select(this)
             .attr('stroke', 'green')
@@ -251,7 +248,6 @@ function executeMap(map) {
           var remove_name = '#text' + d.properties.STATE_CODE;
           d3.select(remove_name).remove();
 
-
           d3.select('.details').style('visibility', 'visible');
 
           map
@@ -261,10 +257,11 @@ function executeMap(map) {
             .attr('transform', 'translate(' + path.centroid(d) + ')')
             .attr('text-anchor', 'middle')
             .attr('dy', 15)
-            .text(function(d) {
-              if (emptyArray[i] == 0) return "!";
+            .text(function (d) {
+              if (emptyArray[i] == 0) return '!';
               else return emptyArray[i];
-            }).style("font-weight",600)
+            })
+            .style('font-weight', 600)
             //.text(d.properties.STATE_NAME + " \r\n" + emptyArray[i])
             .style('font-size', '20px');
 
@@ -272,149 +269,158 @@ function executeMap(map) {
 
           //random dataset with 5 - 10 numbers: 6 numbers
           pie_dataset = [];
-         
+
           if (+d.properties.STATE_CODE <= 7) {
-
             /*--------Read file----------*/
-            d3.csv('data/Chart' + d.properties.STATE_CODE + '.csv').then(function(
-              data
-            ) {
-              pie_dataset = [];
+            d3.csv('data/Chart' + d.properties.STATE_CODE + '.csv')
+              .then(function (data) {
+                pie_dataset = [];
 
-              //Set input domain for color scale
-              for (let i = 1; i <= 2; i++) {
-                pie_dataset.push(parseFloat(d3.entries(data[year - 10])[i].value));
-              }
+                //Set input domain for color scale
+                for (let i = 1; i <= 2; i++) {
+                  pie_dataset.push(
+                    parseFloat(d3.entries(data[year - 10])[i].value)
+                  );
+                }
 
+                /*--------Read file----------*/
 
-              /*--------Read file----------*/
+                var outerRadius = pie_h / 2; //radius w/2 --> d=w
+                var innerRadius = 0; //circle, not donut --> inner radius 0
+                var arc = d3
+                  .arc() //create angles for circle, segments of the pie chart
+                  .innerRadius(innerRadius) //set innerRadius
+                  .outerRadius(outerRadius); //set outterRadius
+                while (!d3.select('.meme').empty()) {
+                  d3.select('.meme').remove();
+                }
 
-              var outerRadius = pie_h / 2; //radius w/2 --> d=w
-              var innerRadius = 0; //circle, not donut --> inner radius 0
-              var arc = d3
-                .arc() //create angles for circle, segments of the pie chart
-                .innerRadius(innerRadius) //set innerRadius
-                .outerRadius(outerRadius); //set outterRadius
-              while (!d3.select('.meme').empty()) {
-                d3.select('.meme').remove();
+                var pie = d3.pie(); //pie chart
 
-              }
+                //set up SVG canvas
+                var pie_svg = d3
+                  .select('#chart1_pie')
+                  .append('svg')
+                  .attr('width', pie_w)
+                  .attr('height', pie_h)
+                  .attr('class', 'meme');
 
+                //Set up our arcs
+                var arcs = pie_svg
+                  .selectAll('g.arc')
+                  //arcs are being added as a group set
+                  .data(pie(pie_dataset))
+                  //data being read into the SVG is that from the pie() Function
+                  // pie(): generate the angles we need to draw the segments
+                  .enter() //create segment
+                  .append('g') //append group
+                  .attr('class', 'arc') //group set
 
-              var pie = d3.pie(); //pie chart
+                  .attr(
+                    'transform',
+                    'translate(' + outerRadius + ',' + outerRadius + ')'
+                  );
+                //translate w/2, w/2 --> position of centroid
+                //if (0,0) --> 1/4 pie chart is shown
 
-              //set up SVG canvas
-              var pie_svg = d3
-                .select('#chart1_pie')
-                .append('svg')
-                .attr('width', pie_w)
-                .attr('height', pie_h).attr('class', "meme");
+                var tmp_color_array = [];
+                //Draw arc paths
+                arcs
+                  .append('path') //generate paths for the data bournd to the arcs group
+                  .attr('class', 'tooltip3')
+                  .transition()
+                  .duration(1000)
+                  .attr('fill', function (d, i) {
+                    return pie_color(i); //use color scale --> each segment has each distinguish color
+                  })
+                  .attr(
+                    'd',
+                    function (d, i) {
+                      return arc(d, i);
+                    } //call arc segment
+                  );
 
-              //Set up our arcs
-              var arcs = pie_svg
-                .selectAll('g.arc')
-                //arcs are being added as a group set
-                .data(pie(pie_dataset))
-                //data being read into the SVG is that from the pie() Function
-                // pie(): generate the angles we need to draw the segments
-                .enter() //create segment
-                .append('g') //append group
-                .attr('class', 'arc') //group set
+                var pie_legends = d3
+                  .select('#chart1_pie_legends')
+                  .append('svg')
+                  .attr('width', 450)
+                  .attr('height', 35)
+                  .attr('class', 'meme');
+                pie_legends
+                  .selectAll('dotsss')
+                  .data([
+                    'non-renewable energy',
+                    'renewable energy (Unit: GWh)',
+                  ])
+                  .enter()
+                  .append('circle')
+                  .attr('cx', (d, i) => 200 * i + 10) //pie_h + 100
+                  .attr('cy', 20) //(d,i) => 150 + i*(40)
+                  .attr('r', 10)
+                  .style('fill', (d, i) => pie_color(i));
 
-                .attr(
-                  'transform',
-                  'translate(' + outerRadius + ',' + outerRadius + ')'
-                );
-              //translate w/2, w/2 --> position of centroid
-              //if (0,0) --> 1/4 pie chart is shown
+                pie_legends
+                  .selectAll('legendssss')
+                  .data([
+                    'non-renewable energy',
+                    'renewable energy (Unit: GWh)',
+                  ])
+                  .enter()
+                  .append('text')
+                  .attr('x', (d, i) => 200 * i + 25) //pie_h + 100
+                  .attr('y', 28) //(d,i) => 150 + i*(40)
+                  .attr('font-size', '15px')
+                  .text(d => d);
 
-              var tmp_color_array = [];
-              //Draw arc paths
-              arcs
-                .append('path') //generate paths for the data bournd to the arcs group
-                .attr('class', 'tooltip3').transition().duration(1000)
-                .attr('fill', function(d, i) {
-                  return pie_color(i); //use color scale --> each segment has each distinguish color
-                })
-                .attr(
-                  'd',
-                  function(d, i) {
-                    return arc(d, i);
-                  } //call arc segment
-                );
+                //add label text
+                arcs
+                  .append('text') //pie generator generates an array containing all path data and data value
+                  .attr('class', 'tooltip3')
 
-              var pie_legends = d3
-                .select('#chart1_pie_legends')
-                .append('svg')
-                .attr('width', 450)
-                .attr('height', 35).attr('class', "meme");
-              pie_legends.selectAll('dotsss')
-                .data(['non-renewable energy', 'renewable energy (Unit: GWh)'])
-                .enter()
-                .append("circle")
-                .attr("cx", (d, i) => 200 * i + 10) //pie_h + 100
-                .attr("cy", 20) //(d,i) => 150 + i*(40)
-                .attr("r", 10)
-                .style("fill", (d, i) => pie_color(i));
-
-              pie_legends.selectAll('legendssss')
-                .data(['non-renewable energy', 'renewable energy (Unit: GWh)'])
-                .enter()
-                .append("text")
-                .attr("x", (d, i) => 200 * i + 25) //pie_h + 100
-                .attr("y", 28) //(d,i) => 150 + i*(40)
-                .attr("font-size", "15px")
-                .text(d => d);
-
-
-              //add label text
-              arcs
-                .append('text') //pie generator generates an array containing all path data and data value
-                .attr('class', 'tooltip3')
-
-                .text(function(d) {
-                  return d.value;
-                }) //to access the value inside an array
-                .attr('transform', function(d) {
-                  return 'translate(' + (arc.centroid(d)[0] - 18) + ',' + arc.centroid(d)[1] + ')';
-                }).attr('font-size', '12px').style("font-weight",700); //by default, text is displayed at the centroid of the chart
-              // -> transform + arc.centroid to find the middle of an irregular shape.
-              /*-----------Pie chart ----------------------*/
-
-            }).catch(function(error) {
- while (!d3.select('.meme').empty()) {
-            d3.select('.meme').remove();
-
-
-          }
-            });
+                  .text(function (d) {
+                    return d.value;
+                  }) //to access the value inside an array
+                  .attr('transform', function (d) {
+                    return (
+                      'translate(' +
+                      (arc.centroid(d)[0] - 18) +
+                      ',' +
+                      arc.centroid(d)[1] +
+                      ')'
+                    );
+                  })
+                  .attr('font-size', '12px')
+                  .style('font-weight', 700); //by default, text is displayed at the centroid of the chart
+                // -> transform + arc.centroid to find the middle of an irregular shape.
+                /*-----------Pie chart ----------------------*/
+              })
+              .catch(function (error) {
+                while (!d3.select('.meme').empty()) {
+                  d3.select('.meme').remove();
+                }
+              });
           } else {
- while (!d3.select('.meme').empty()) {
-            d3.select('.meme').remove();
-
-
+            while (!d3.select('.meme').empty()) {
+              d3.select('.meme').remove();
+            }
+            d3.select('.females')
+              .append('text')
+              .attr('id', 'tooltop_nondata')
+              .text('no data');
           }
-            d3.select('.females').append("text").attr("id", "tooltop_nondata").text("no data");
-
-          };
           //----------------------
 
-
-          d3.select('.country').text("Energy generation in " + d.properties.STATE_NAME);
-
-
+          d3.select('.country').text(
+            'Energy generation in ' + d.properties.STATE_NAME
+          );
 
           //if (this.id == 'path8') {
           //}
 
-
-
-
-
           //-----------
         })
 
-        .on('mouseout', function(d) {
+        .on('mouseout', function (d) {
           d3.select(this).attr('stroke', 'white').attr('stroke-width', '1px');
 
           d3.select('.tooltip1').remove();
@@ -426,10 +432,9 @@ function executeMap(map) {
             .attr('text-anchor', 'middle')
             .attr('dy', 15)
             .attr('id', 'text' + d.properties.STATE_CODE)
-            .text(d.properties.STATE_NAME).style("font-weight",600)
+            .text(d.properties.STATE_NAME)
+            .style('font-weight', 600)
             .style('font-size', '10px');
-
-
         });
 
       map
@@ -439,19 +444,20 @@ function executeMap(map) {
         .append('g')
         .classed('state', true)
         .append('text')
-        .attr('id', function(d) {
+        .attr('id', function (d) {
           return 'text' + d.properties.STATE_CODE;
         })
 
         .attr('fill', 'black')
-        .attr('transform', function(d) {
+        .attr('transform', function (d) {
           return 'translate(' + path.centroid(d) + ')';
         })
         .attr('text-anchor', 'middle')
         .attr('dy', 15)
-        .text(function(d) {
+        .text(function (d) {
           return d.properties.STATE_NAME;
-        }).style("font-weight",600)
+        })
+        .style('font-weight', 600)
         .style('font-size', '10px');
 
       //----
@@ -466,16 +472,13 @@ function filterYear(map) {
   const select = document.getElementById('map1_select_year');
 
   select.addEventListener('change', function handleChange(event) {
-
     year = parseInt(event.target.value) - 1999;
     // ??? get selected VALUE even outside event handler
 
-
     // ??? get selected TEXT in or outside event handler
 
-
     /*------------ Update color --------*/
-    d3.csv('data/Map_V4.csv').then(function(data) {
+    d3.csv('data/Map_V4.csv').then(function (data) {
       //Set input domain for color scale
       emptyArray = [];
       for (let j = 1; j <= 9; j++) {
@@ -499,32 +502,25 @@ function filterYear(map) {
 }
 //-----------
 
-
 /*-------------On Click for hide --------------*/
 function hideButton() {
-
-  d3.select('.details').transition().style("visibility", "hidden");
+  d3.select('.details').transition().style('visibility', 'hidden');
 
   while (!d3.select('.meme').empty()) {
     d3.select('.meme').remove();
-
   }
-
 }
 /*-------------On Click for hide --------------*/
 window.onload = init;
-
 
 //Visualisation 2
 var vis2_dataset_f;
 
 function vis2_execution() {
-
-
   vis2_dataset_f = []; //creating an empty array
 
   //read data
-  d3.csv('data/Vis2_V1.csv').then(function(data) {
+  d3.csv('data/Vis2_V1.csv').then(function (data) {
     //Set input domain for color scale
     vis2_dataset_f = [];
     for (let j = 0; j < data.length; j++) {
@@ -533,260 +529,481 @@ function vis2_execution() {
       vis2_dataset_f.push(d3.entries(data)[j].value);
     }
 
-
-applyFilter();
-
-
+    applyFilter();
   });
-  
-  
- 
 }
-
-
 
 // Visualisation 2
 //button handle
 
-function goFilter()
-{
-	var flag=true;
-    var energyList = ['lignite','coal','oil','naturalgas','solar','biomass','nuclear','hydro','wind'];
-    for (let i=0;i<energyList.length;i++)
-    {
-        filter[i] = document.getElementById(energyList[i]).checked;
-		flag = flag & !filter[i];
-    }
-	if (flag) resetFilter(); 
-	else applyFilter();
+function goFilter() {
+  var flag = true;
+  var energyList = [
+    'lignite',
+    'coal',
+    'oil',
+    'naturalgas',
+    'solar',
+    'biomass',
+    'nuclear',
+    'hydro',
+    'wind',
+  ];
+  for (let i = 0; i < energyList.length; i++) {
+    filter[i] = document.getElementById(energyList[i]).checked;
+    flag = flag & !filter[i];
+  }
+  if (flag) resetFilter();
+  else applyFilter();
 }
 var filter = [];
-  for (let i=0;i<9;i++)
-    {
-        filter.push(1);
-    }
-function resetFilter()
-{
-    var energyList = ['lignite','coal','oil','naturalgas','solar','biomass','nuclear','hydro','wind'];
-    for (let i=0;i<energyList.length;i++)
-    {
-        document.getElementById(energyList[i]).checked = 1;
-        filter[i] = 1;
-    }
-	applyFilter();
+for (let i = 0; i < 9; i++) {
+  filter.push(1);
 }
-function applyFilter()
-{
-    
-    var vis2_dataset_pg = [];
-for (let i=0;i<vis2_dataset_f.length;i++)
-{
-    if (filter[i])
-        vis2_dataset_pg.push(vis2_dataset_f[i]);
+function resetFilter() {
+  var energyList = [
+    'lignite',
+    'coal',
+    'oil',
+    'naturalgas',
+    'solar',
+    'biomass',
+    'nuclear',
+    'hydro',
+    'wind',
+  ];
+  for (let i = 0; i < energyList.length; i++) {
+    document.getElementById(energyList[i]).checked = 1;
+    filter[i] = 1;
+  }
+  applyFilter();
 }
+function applyFilter() {
+  var vis2_dataset_pg = [];
+  for (let i = 0; i < vis2_dataset_f.length; i++) {
+    if (filter[i]) vis2_dataset_pg.push(vis2_dataset_f[i]);
+  }
 
+  //read data
+  var vis2_w = w * 0.5;
+  var vis2_h =
+    Math.max(document.documentElement.clientHeight, window.innerHeight || 0) *
+    0.8;
+  var vis2_padding = 70;
 
-    //read data
-    var vis2_w = w * 0.5;
-    var vis2_h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) *0.8;
-    var vis2_padding = 70;
+  var vis2_xScale = d3
+    .scaleBand() //generate an ordinal scale for x-axis
+    //normally domain(["high","med","low"])
+    .domain(d3.range(vis2_dataset_pg.length)) //calculate the range of the domain
+    .rangeRound([vis2_padding, vis2_w - vis2_padding]) // specify the size of the range the domain needs to be mapped
+    // round the bandwidths to whole number
+    .paddingInner(0.05); // to generate a padding value of 5% of the bandwidth
 
+  var vis2_yScale = d3
+    .scaleLinear() //quantitative data
+    .domain([
+      0,
+      d3.max(vis2_dataset_pg, function (d) {
+        return +d.High;
+      }),
+    ]) //domain of y
+    .range([vis2_h - vis2_padding, vis2_padding]); // specify the size of the range the domain needs to be mapped
+  // round the bandwidths to whole number
+  // range of y
 
+  d3.select('#vis2_id').remove();
 
-    var vis2_xScale = d3.scaleBand() //generate an ordinal scale for x-axis
-      //normally domain(["high","med","low"])
-      .domain(d3.range(vis2_dataset_pg.length)) //calculate the range of the domain
-      .rangeRound([vis2_padding, vis2_w - vis2_padding]) // specify the size of the range the domain needs to be mapped 
-      // round the bandwidths to whole number	
-      .paddingInner(0.05); // to generate a padding value of 5% of the bandwidth
+  var vis2_svg = d3
+    .select('#chart2')
+    .append('svg')
+    .attr('width', vis2_w)
+    .attr('height', vis2_h)
+    .attr('id', 'vis2_id');
 
-    var vis2_yScale = d3.scaleLinear() //quantitative data
-      .domain([
-        0,
-        d3.max(vis2_dataset_pg, function(d) { return +d.High; })
-      ]) //domain of y
-      .range([vis2_h - vis2_padding, vis2_padding]) // specify the size of the range the domain needs to be mapped 
-    // round the bandwidths to whole number	
-    // range of y 
-
-
-d3.select('#vis2_id').remove();
-
-    var vis2_svg = d3.select("#chart2")
-      .append("svg")
-      .attr("width", vis2_w)
-      .attr("height", vis2_h).attr("id","vis2_id");
-
-//Create "Year" on  X axis
-vis2_svg.append('text')
-    .attr('x', vis2_w/2 - 20)
+  //Create "Year" on  X axis
+  vis2_svg
+    .append('text')
+    .attr('x', vis2_w / 2 - 20)
     .attr('y', vis2_h - 15)
     .attr('text-anchor', 'middle')
     .style('font-size', '15px')
     .text('Type of energy');
 
-//Create "Food waste per capita (kg/year)" on Y Axis
-vis2_svg.append('text')
+  //Create "Food waste per capita (kg/year)" on Y Axis
+  vis2_svg
+    .append('text')
     .attr('x', -(vis2_h / 2))
     .attr('y', vis2_padding - 35)
     .attr('text-anchor', 'middle')
     .attr('transform', 'rotate(270)')
     .style('font-size', '15px')
-    .text('Tonnes of CO2 emission');
+    .text('Tonnes/GWh of CO2 emission');
 
-    var vis2_xAxis = d3.axisBottom()
-      .ticks(vis2_dataset_pg.length) /*controlling the tick* - interval */
-      .scale(vis2_xScale).tickFormat(i => vis2_dataset_pg[i].Technology);
+  var vis2_xAxis = d3
+    .axisBottom()
+    .ticks(vis2_dataset_pg.length) /*controlling the tick* - interval */
+    .scale(vis2_xScale)
+    .tickFormat(i => vis2_dataset_pg[i].Technology);
 
-    var vis2_yAxis = d3.axisLeft()
-      .ticks(8) /*controlling the tick* - interval */
-      .scale(vis2_yScale);
+  var vis2_yAxis = d3
+    .axisLeft()
+    .ticks(8) /*controlling the tick* - interval */
+    .scale(vis2_yScale);
 
+  vis2_svg
+    .selectAll('rect') /*select all rect even though they dont yet exist*/
+    .data(vis2_dataset_pg) /*count + prepare data values*/
+    .enter() /*create a new plce holder element for each bit of data*/
+    .append('rect') /* append a rect element to match each placeholder*/
+    .attr('x', function (d, i) {
+      return vis2_xScale(i);
+    }) /* to scale value of x*/
+    .attr('y', function (d) {
+      return vis2_yScale(d.Mean);
+    }) /* value of y - positions*/
+    .attr(
+      'width',
+      vis2_xScale.bandwidth()
+    ) /* barpadding to create space bw each column*/
+    .attr('height', function (d) {
+      return vis2_h - vis2_padding - vis2_yScale(d.Mean);
+    }) /* extend the height for an easy look*/
+    .attr('fill', function (d) {
+      if (+d.Mean > 200) return 'red';
+      return 'green';
+    })
+    .on('mouseover', function (d, i) {
+      //when the mouse hovers
 
+      d3.select(this).attr('fill', 'orange'); //that column turns orange
 
-    vis2_svg.selectAll("rect") /*select all rect even though they dont yet exist*/
-      .data(vis2_dataset_pg) /*count + prepare data values*/
-      .enter() /*create a new plce holder element for each bit of data*/
-      .append("rect") /* append a rect element to match each placeholder*/
-      .attr("x", function(d, i) {
-        return vis2_xScale(i);
-      }) /* to scale value of x*/
-      .attr("y", function(d) {
-        return vis2_yScale(d.Mean);
-      }) /* value of y - positions*/
-      .attr("width", vis2_xScale.bandwidth()) /* barpadding to create space bw each column*/
-      .attr("height", function(d) {
-        return vis2_h - vis2_padding - vis2_yScale(d.Mean);
-      }) /* extend the height for an easy look*/
-      .attr("fill", function(d) {if (+d.Mean>200) return "red"; return "green";})
-	.on("mouseover", function(d, i ) { //when the mouse hovers
+      //get bar position
+      var xPosition =
+        parseFloat(d3.select(this).attr('x')) + vis2_xScale.bandwidth() / 2 - 7;
+      var yPosition = parseFloat(d3.select(this).attr('y')) + 30;
 
-			   		d3.select(this)
-			   			.attr("fill", "orange"); //that column turns orange
-					
-					//get bar position
-					var xPosition = parseFloat(d3.select(this).attr("x"))+ vis2_xScale.bandwidth() / 2 - 7;
-					var yPosition = parseFloat(d3.select(this).attr("y")) + 30;
+      vis2_svg
+        .append('text')
+        .attr('id', 'vis2_tooltip')
+        .attr('x', xPosition - (d.Mean.length / 2) * 4) //;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
+        .attr('y', vis2_h - vis2_padding + 32) //vis2_yScale(d.Low) +35)//function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
+        .attr('font-weight', 'bold')
+        .text(d.Mean);
+    })
+    .on('mouseout', function () {
+      //when the mouse no longer hovers
+      d3.select(this)
+        .transition() //smoother
+        .delay(100)
+        .duration(1000)
+        .attr('fill', function (d) {
+          if (+d.Mean > 200) return 'red';
+          return 'green';
+        }); //that column turns back to default color
+      d3.select('#vis2_tooltip').remove(); //remove value of column when mouse no longer hovers
+    });
+  /* shape color*/
+  //set up axis
+  vis2_svg
+    .append('g')
+    .attr('transform', 'translate(0,' + (vis2_h - vis2_padding) + ')') //position for x axis
+    .call(vis2_xAxis); //draw x axis
 
-					vis2_svg.append("text")
-					   .attr("id", "vis2_tooltip")
-					   .attr("x", xPosition - (d.Mean.length/2)*4)//;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
-					   .attr("y", vis2_h - vis2_padding + 32) //vis2_yScale(d.Low) +35)//function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
-					   .attr("font-weight", "bold")
-					   .text(d.Mean);
-			})
-	.on("mouseout", function() { //when the mouse no longer hovers
-				   d3.select(this)
-						.transition() //smoother
-						.delay(100)
-						.duration(1000)
-						.attr("fill", function(d) {if (+d.Mean>200) return "red"; return "green";}); //that column turns back to default color
-					d3.select("#vis2_tooltip").remove(); //remove value of column when mouse no longer hovers
-		});
-    /* shape color*/
-//set up axis
-    vis2_svg.append("g")
-      .attr("transform", "translate(0," + (vis2_h - vis2_padding) + ")") //position for x axis
-      .call(vis2_xAxis); //draw x axis
+  vis2_svg
+    .append('g')
+    .attr('class', 'y axis') //assign class for y axis
+    .attr('transform', 'translate(' + vis2_padding + ',0)') //position for y axis
+    .call(vis2_yAxis); //draw y axis
+  // set up axis
+  // Legendssssssssss
 
-    vis2_svg.append("g")
-      .attr("class", "y axis") //assign class for y axis
-      .attr("transform", "translate(" + vis2_padding + ",0)") //position for y axis
-      .call(vis2_yAxis); //draw y axis
-// set up axis
-// Legendssssssssss
+  vis2_svg
+    .selectAll('dotsss')
+    .data(['non-renewable energy', 'renewable energy (Unit: GWh)'])
+    .enter()
+    .append('circle')
+    .attr('cx', (d, i) => vis2_w - vis2_padding - 100) //pie_h + 100
+    .attr('cy', (d, i) => 100 + 30 * i) //(d,i) => 150 + i*(40)
+    .attr('r', 8)
+    .style('fill', function (d, i) {
+      if (i == 1) return 'green';
+      return 'red';
+    });
 
-              vis2_svg.selectAll('dotsss')
-                .data(['non-renewable energy', 'renewable energy (Unit: GWh)'])
-                .enter()
-                .append("circle")
-                .attr("cx", (d, i) => vis2_w - vis2_padding - 100) //pie_h + 100
-                .attr("cy", (d,i) => 100 + 30*i) //(d,i) => 150 + i*(40)
-                .attr("r", 8)
-                .style("fill", function(d,i) {if (i==1) return "green"; return "red";});
+  vis2_svg
+    .selectAll('legendssss')
+    .data(['non-renewable energy', 'renewable energy'])
+    .enter()
+    .append('text')
+    .attr('x', vis2_w - vis2_padding + 20 - 100) //pie_h + 100
+    .attr('y', (d, i) => 105 + 30 * i) //(d,i) => 150 + i*(40)
+    .attr('font-size', '12px')
+    .text(d => d);
 
-              vis2_svg.selectAll('legendssss')
-                .data(['non-renewable energy', 'renewable energy'])
-                .enter()
-                .append("text")
-                .attr("x", vis2_w - vis2_padding + 20 -100) //pie_h + 100
-                .attr("y", (d, i) => 105 + 30 * i) //(d,i) => 150 + i*(40)
-                .attr("font-size", "12px")
-                .text(d => d);
-                
-                /*----------set up highlow--------------*/
-                
-		
- vis2_svg.selectAll("vis2_lowhigh_lineeee") /*select all rect even though they dont yet exist*/
-      .data(vis2_dataset_pg) /*count + prepare data values*/
-      .enter() /*create a new plce holder element for each bit of data*/
-      .append("line") /* append a rect element to match each placeholder*/
-      .attr("class", (d,i) => "vis2_lowhigh" + i) //set class
-      .attr("x1", function(d, i) { console.log(vis2_xScale(i) + vis2_xScale.bandwidth()/2);
-        return vis2_xScale(i) + vis2_xScale.bandwidth()/2;
-      }) /* to scale value of x*/
-      .attr("y1", function(d) {
-        return vis2_yScale(d.Low);
-      }) /* value of y - positions*/
-      .attr("x2", function(d, i) {
-        return vis2_xScale(i) + vis2_xScale.bandwidth()/2;
-      }) /* to scale value of x*/
-      .attr("y2", function(d) {
-        return vis2_yScale(d.High);
-      }) /* value of y - positions*/
-      
-		.style("stroke", "black") //set color for line
-		.style("stroke-width", 1); //set width for line
-		//.style("stroke-dasharray", 2); //set gap for line
-	
-vis2_svg.selectAll("vis2_lowhigh_high") /*select all rect even though they dont yet exist*/
-      .data(vis2_dataset_pg) /*count + prepare data values*/
-      .enter() /*create a new plce holder element for each bit of data*/
-      .append("line") /* append a rect element to match each placeholder*/
-      .attr("class", (d,i) => "vis2_lowhigh_high" + i) //set class
-      .attr("x1", function(d, i) { console.log(vis2_xScale(i) + vis2_xScale.bandwidth()/2-2);
-        return vis2_xScale(i) + vis2_xScale.bandwidth()/2-2;
-      }) /* to scale value of x*/
-      .attr("y1", function(d) {
-        return vis2_yScale(d.High);
-      }) /* value of y - positions*/
-      .attr("x2", function(d, i) {
-        return vis2_xScale(i) + vis2_xScale.bandwidth()/2 +2;
-      }) /* to scale value of x*/
-      .attr("y2", function(d) {
-        return vis2_yScale(d.High);
-      }) /* value of y - positions*/
-      
-		.style("stroke", "black") //set color for line
-		.style("stroke-width", 1); //set width for line
-		//.style("stroke-dasharray", 2); //set gap for line
-	
+  /*----------set up highlow--------------*/
 
-	
-vis2_svg.selectAll("vis2_lowhigh_high") /*select all rect even though they dont yet exist*/
-      .data(vis2_dataset_pg) /*count + prepare data values*/
-      .enter() /*create a new plce holder element for each bit of data*/
-      .append("line") /* append a rect element to match each placeholder*/
-      .attr("class", (d,i) => "vis2_lowhigh_high" + i) //set class
-      .attr("x1", function(d, i) { console.log(vis2_xScale(i) + vis2_xScale.bandwidth()/2-2);
-        return vis2_xScale(i) + vis2_xScale.bandwidth()/2-2;
-      }) /* to scale value of x*/
-      .attr("y1", function(d) {
-        return vis2_yScale(d.Low);
-      }) /* value of y - positions*/
-      .attr("x2", function(d, i) {
-        return vis2_xScale(i) + vis2_xScale.bandwidth()/2 +2;
-      }) /* to scale value of x*/
-      .attr("y2", function(d) {
-        return vis2_yScale(d.Low);
-      }) /* value of y - positions*/
-      
-		.style("stroke", "black") //set color for line
-		.style("stroke-width", 1); //set width for line
-		//.style("stroke-dasharray", 2); //set gap for line
+  vis2_svg
+    .selectAll(
+      'vis2_lowhigh_lineeee'
+    ) /*select all rect even though they dont yet exist*/
+    .data(vis2_dataset_pg) /*count + prepare data values*/
+    .enter() /*create a new plce holder element for each bit of data*/
+    .append('line') /* append a rect element to match each placeholder*/
+    .attr('class', (d, i) => 'vis2_lowhigh' + i) //set class
+    .attr('x1', function (d, i) {
+      console.log(vis2_xScale(i) + vis2_xScale.bandwidth() / 2);
+      return vis2_xScale(i) + vis2_xScale.bandwidth() / 2;
+    }) /* to scale value of x*/
+    .attr('y1', function (d) {
+      return vis2_yScale(d.Low);
+    }) /* value of y - positions*/
+    .attr('x2', function (d, i) {
+      return vis2_xScale(i) + vis2_xScale.bandwidth() / 2;
+    }) /* to scale value of x*/
+    .attr('y2', function (d) {
+      return vis2_yScale(d.High);
+    }) /* value of y - positions*/
 
-                /*----------set up highlow--------------*/
-//Legends
-    
+    .style('stroke', 'black') //set color for line
+    .style('stroke-width', 1); //set width for line
+  //.style("stroke-dasharray", 2); //set gap for line
+
+  vis2_svg
+    .selectAll(
+      'vis2_lowhigh_high'
+    ) /*select all rect even though they dont yet exist*/
+    .data(vis2_dataset_pg) /*count + prepare data values*/
+    .enter() /*create a new plce holder element for each bit of data*/
+    .append('line') /* append a rect element to match each placeholder*/
+    .attr('class', (d, i) => 'vis2_lowhigh_high' + i) //set class
+    .attr('x1', function (d, i) {
+      console.log(vis2_xScale(i) + vis2_xScale.bandwidth() / 2 - 2);
+      return vis2_xScale(i) + vis2_xScale.bandwidth() / 2 - 2;
+    }) /* to scale value of x*/
+    .attr('y1', function (d) {
+      return vis2_yScale(d.High);
+    }) /* value of y - positions*/
+    .attr('x2', function (d, i) {
+      return vis2_xScale(i) + vis2_xScale.bandwidth() / 2 + 2;
+    }) /* to scale value of x*/
+    .attr('y2', function (d) {
+      return vis2_yScale(d.High);
+    }) /* value of y - positions*/
+
+    .style('stroke', 'black') //set color for line
+    .style('stroke-width', 1); //set width for line
+  //.style("stroke-dasharray", 2); //set gap for line
+
+  vis2_svg
+    .selectAll(
+      'vis2_lowhigh_high'
+    ) /*select all rect even though they dont yet exist*/
+    .data(vis2_dataset_pg) /*count + prepare data values*/
+    .enter() /*create a new plce holder element for each bit of data*/
+    .append('line') /* append a rect element to match each placeholder*/
+    .attr('class', (d, i) => 'vis2_lowhigh_high' + i) //set class
+    .attr('x1', function (d, i) {
+      console.log(vis2_xScale(i) + vis2_xScale.bandwidth() / 2 - 2);
+      return vis2_xScale(i) + vis2_xScale.bandwidth() / 2 - 2;
+    }) /* to scale value of x*/
+    .attr('y1', function (d) {
+      return vis2_yScale(d.Low);
+    }) /* value of y - positions*/
+    .attr('x2', function (d, i) {
+      return vis2_xScale(i) + vis2_xScale.bandwidth() / 2 + 2;
+    }) /* to scale value of x*/
+    .attr('y2', function (d) {
+      return vis2_yScale(d.Low);
+    }) /* value of y - positions*/
+
+    .style('stroke', 'black') //set color for line
+    .style('stroke-width', 1); //set width for line
+  //.style("stroke-dasharray", 2); //set gap for line
+
+  /*----------set up highlow--------------*/
+  //Legends
 }
 //button handle
+
+
+/*------Vis3-----------*/
+var vis3_dataset_f = [];
+function vis3_execution()
+{
+    
+//13 records/region
+  //read data
+  d3.csv('data/Vis3_V2.csv').then(function (data) {
+    //Set input domain for color scale
+    for (let j = 0; j < data.length; j++) {
+      //   parseFloat(d3.entries(data[parseInt(event.target.value) - 1999])[j].value)
+
+      vis3_dataset_f.push(d3.entries(data)[j].value);
+
+    }
+	vis3_applyFilter();
+
+});
+}
+
+function vis3_applyFilter()
+{
+    var vis3_w = w*0.7;
+    var vis3_h = h;
+    	var vis3_dataset_pg = [];
+
+
+    for (let i = 0; i < vis3_dataset_f.length; i++) {
+    if (vis3_filter[parseInt(i/13)]) vis3_dataset_pg.push(vis3_dataset_f[i]);
+  }
+  
+    var vis3_padding = 50;
+    var vis3_xScale = d3.scaleLinear() //set up scale of x Axis - time
+			.domain([	
+				d3.min(vis3_dataset_pg, function(d) { return +d.rshare; }),//get earliest date
+				d3.max(vis3_dataset_pg, function(d) { return +d.rshare; }) //get ealiert year
+			])
+			.range([vis3_padding,w-vis3_padding]);
+
+	var vis3_yScale = d3.scaleLinear()
+			.domain([
+				d3.min(vis3_dataset_pg, function(d) { return +d.CO2; }),
+				d3.max(vis3_dataset_pg, function(d) { return +d.CO2; })
+			])
+			.range([h-vis3_padding, vis3_padding]);
+
+	
+	//Define axes
+	var vis3_xAxis = d3.axisBottom()
+		   .scale(vis3_xScale)
+		   .ticks(10);
+
+	//Define Y axis
+	var vis3_yAxis = d3.axisLeft()
+		   .scale(vis3_yScale)
+		   .ticks(10);
+  d3.select('#vis3_id').remove();
+
+	//Create SVG element
+	var vis3_svg = d3.select("#chart3")
+			.append("svg")
+			.attr("width", vis3_w)
+			.attr("height", vis3_h).attr("id","vis3_id");
+
+	//Create "Year" on  X axis
+  vis3_svg
+    .append('text')
+    .attr('x', vis3_w / 2 - 20)
+    .attr('y', vis3_h - 15)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '15px')
+    .text('Share of electricity from renewables (%)');
+
+  //Create "Food waste per capita (kg/year)" on Y Axis
+  vis3_svg
+    .append('text')
+    .attr('x', -(vis3_h / 2))
+    .attr('y', vis3_padding - 35)
+    .attr('text-anchor', 'middle')
+    .attr('transform', 'rotate(270)')
+    .style('font-size', '15px')
+    .text('Tonnes of CO2 emission per capita');
+
+var vis3_line = d3.line()
+		.x(function(d){return vis3_xScale(+d.rshare);})
+		.y(function(d){return vis3_yScale(+d.CO2);});
+var tmp_array=[];
+
+	for (let i=0;i<vis3_dataset_pg.length;i++)
+	{
+
+
+		if (i%13==12) 
+		{
+		vis3_svg.append("path") //append path
+		.datum(tmp_array) //data is used to bind each single data value to a different html element
+				//datum is used to bind the data to a single path element
+		.attr("class", "line") //set line to class
+		.attr("d", vis3_line) //set line to d
+		.style("stroke", pie_color(i/13)) //CSS
+		.style("stroke-width", 2) //width of line
+		.style("fill", "none");
+		
+		vis3_svg
+    .append('text')
+    .attr('x', 100)
+    .attr('y', 100 + i)
+    .style('font-size', '15px')
+    
+    .text(vis3_dataset_pg[i].Country).style('fill',pie_color(i/13));
+
+		
+console.log(pie_color(i/13), ' color ', vis3_dataset_pg[i].Country, tmp_array.length);
+		tmp_array = [];
+			continue;
+		}
+
+
+			tmp_array.push(vis3_dataset_pg[i]);
+	}
+
+
+	
+	//Create axes
+	vis3_svg.append("g")
+		.attr("class", "axis")
+		.attr("transform", "translate(0," + (vis3_h - vis3_padding) + ")")
+		.call(vis3_xAxis);
+
+	vis3_svg.append("g")
+		.attr("class", "axis")
+		.attr("transform", "translate(" + vis3_padding + ",0)")
+		.call(vis3_yAxis);
+
+
+}
+
+function vis3_goFilter() {
+  var flag = true;
+  var countryList = [
+    'australia',
+    'US',
+    'germany',
+    'singapore',
+    'france',
+
+    'canada',
+    'world'
+  ];
+  for (let i = 0; i < countryList.length; i++) {
+    vis3_filter[i] = document.getElementById(countryList[i]).checked;
+    flag = flag & !vis3_filter[i];
+  }
+  if (flag) vis3_resetFilter();
+  else vis3_applyFilter();
+}
+var vis3_filter = [];
+for (let i = 0; i < 7; i++) {
+  vis3_filter.push(1);
+}
+function vis3_resetFilter() {
+    
+ var countryList = [
+    'australia',
+    'US',
+    'germany',
+    'singapore',
+    'france',
+
+    'canada',
+    'world'
+  ];
+  for (let i = 0; i < countryList.length; i++) {
+    document.getElementById(countryList[i]).checked = 1;
+    vis3_filter[i] = 1;
+  }
+  vis3_applyFilter();
+}
+
+
+/*------Vis3-----------*/

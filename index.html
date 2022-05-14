@@ -115,10 +115,37 @@
 
 <div class="graph1" id="graph3">
 	<h2>Graph 3</h2>
-	<h3>The relationship between annual CO2 emissions per capita and share of renewable electricity</h3>
-	<br>
-	<label for="membership">Filter by year:</label>
+	<h3>CO2 emissions per capita vs. share of electricity from renewables</h3>
+		<br>
+			<legend><strong><em>Select which energy your would like to include:</em></strong></legend>
+			<p><em>
+			
+			<label for="australia">Australia</label> 
+				<input type="checkbox" id="australia" name="category[]" value="australia" checked="checked"/>
+			
+			<label for="US">US</label> 
+				<input type="checkbox" id="US" name="category[]" value="US" checked="checked"/>
+			
+			<label for="germany">Germany</label> 
+				<input type="checkbox" id="germany" name="category[]" value="germany" checked="checked"/>
+			</em></p><p><em>
+			<label for="singapore">Singapore</label> 
+				<input type="checkbox" id="singapore" name="category[]" value="singapore" checked="checked"/>
+			<label for="france">France</label> 
+				<input type="checkbox" id="france" name="category[]" value="france" checked="checked"/>
+			
+			<label for="canada">Canada</label> 
+				<input type="checkbox" id="canada" name="category[]" value="canada" checked="checked"/>
+			
+<label for="world">World</label> 
+				<input type="checkbox" id="world" name="category[]" value="world" checked="checked"/>
+			
+			</em></p>
+   <p> <button type="button" id="vis3_go" onclick="vis3_goFilter()"><strong>APPLY</strong></button>    
+     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  <button type="button" id="vis3_reset" onclick="vis3_resetFilter()"><strong>RESET</strong></button>
+	</p>
 </div>
+	<p id="chart3"></p>
 
 	<footer>
 	<p>COS30045 Data Visualisation<br>Semester 1 2022</p>
