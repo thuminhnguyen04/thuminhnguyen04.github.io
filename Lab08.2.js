@@ -1,6 +1,6 @@
 var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
   h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) * 0.6;
-
+ 
 var pie_w = h / 2; //set width and height for svg
 var pie_h = pie_w;
 var year;
@@ -190,7 +190,6 @@ function executeMap(map) {
   year = 10; //2009
   d3.csv('data/Map_V4.csv').then(function(data) {
     //Set input domain for color scale
-    console.log(d3.entries(data[year])[2].value);
     for (let i = 0; i < 9; i++) {
       emptyArray.push(parseFloat(d3.entries(data[year])[1 + i].value));
     }
@@ -200,7 +199,6 @@ function executeMap(map) {
       // d3.min(emptyArray), //min for unemployed list value
       // d3.max(emptyArray), //max for unemployed list value
     ]);
-    console.log(color);
     //Load in GeoJSON data
     d3.json(
       'https://gist.githubusercontent.com/GerardoFurtado/02aa65e5522104cb692e/raw/8108fbd4103a827e67444381ff594f7df8450411/aust.json'
@@ -298,7 +296,6 @@ function executeMap(map) {
                 .innerRadius(innerRadius) //set innerRadius
                 .outerRadius(outerRadius); //set outterRadius
               while (!d3.select('.meme').empty()) {
-                console.log(d3.select('.meme').empty());
                 d3.select('.meme').remove();
 
               }
@@ -379,9 +376,8 @@ function executeMap(map) {
                   return d.value;
                 }) //to access the value inside an array
                 .attr('transform', function(d) {
-                  console.log(arc.centroid(d));
                   return 'translate(' + (arc.centroid(d)[0] - 18) + ',' + arc.centroid(d)[1] + ')';
-                }).attr('font-size', '12px'); //by default, text is displayed at the centroid of the chart
+                }).attr('font-size', '12px').style("font-weight",700); //by default, text is displayed at the centroid of the chart
               // -> transform + arc.centroid to find the middle of an irregular shape.
               /*-----------Pie chart ----------------------*/
 
@@ -391,7 +387,6 @@ function executeMap(map) {
 
 
           }
-              console.log(error);
             });
           } else {
  while (!d3.select('.meme').empty()) {
@@ -399,7 +394,6 @@ function executeMap(map) {
 
 
           }
-            console.log("No data");
             d3.select('.females').append("text").attr("id", "tooltop_nondata").text("no data");
 
           };
@@ -472,13 +466,13 @@ function filterYear(map) {
   const select = document.getElementById('map1_select_year');
 
   select.addEventListener('change', function handleChange(event) {
-    console.log(event.target.value); // ??? get selected VALUE
+
     year = parseInt(event.target.value) - 1999;
     // ??? get selected VALUE even outside event handler
-    console.log(select.options[select.selectedIndex].value);
+
 
     // ??? get selected TEXT in or outside event handler
-    console.log(select.options[select.selectedIndex].text);
+
 
     /*------------ Update color --------*/
     d3.csv('data/Map_V4.csv').then(function(data) {
@@ -522,45 +516,86 @@ window.onload = init;
 
 
 //Visualisation 2
-
+var vis2_dataset_f;
 
 function vis2_execution() {
 
 
-  var vis2_dataset = []; //creating an empty array
+  vis2_dataset_f = []; //creating an empty array
 
   //read data
   d3.csv('data/Vis2_V1.csv').then(function(data) {
     //Set input domain for color scale
-    vis2_dataset = [];
+    vis2_dataset_f = [];
     for (let j = 0; j < data.length; j++) {
       //   parseFloat(d3.entries(data[parseInt(event.target.value) - 1999])[j].value)
 
-      //console.log( d3.entries(data)[j].value);
-      vis2_dataset.push(d3.entries(data)[j].value);
+      vis2_dataset_f.push(d3.entries(data)[j].value);
     }
 
 
+applyFilter();
 
 
+  });
+  
+  
+ 
+}
+
+
+
+// Visualisation 2
+//button handle
+
+function goFilter()
+{
+	var flag=true;
+    var energyList = ['lignite','coal','oil','naturalgas','solar','biomass','nuclear','hydro','wind'];
+    for (let i=0;i<energyList.length;i++)
+    {
+        filter[i] = document.getElementById(energyList[i]).checked;
+		flag = flag & !filter[i];
+    }
+	if (flag) resetFilter(); 
+	else applyFilter();
+}
+var filter = [];
+  for (let i=0;i<9;i++)
+    {
+        filter.push(1);
+    }
+function resetFilter()
+{
+    var energyList = ['lignite','coal','oil','naturalgas','solar','biomass','nuclear','hydro','wind'];
+    for (let i=0;i<energyList.length;i++)
+    {
+        document.getElementById(energyList[i]).checked = 1;
+        filter[i] = 1;
+    }
+	applyFilter();
+}
+function applyFilter()
+{
+    
+    var vis2_dataset_pg = [];
+for (let i=0;i<vis2_dataset_f.length;i++)
+{
+    if (filter[i])
+        vis2_dataset_pg.push(vis2_dataset_f[i]);
+}
 
 
     //read data
     var vis2_w = w * 0.5;
-    var vis2_h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) * 0.6;
-    var vis2_padding = 40;
-    var vis2_maxValue = 25; // set max value for column	
-    var vis2_numDataPoints = 20; //number of points
-    var vis2_range = Math.random() * 1000; //range of data, random() will return double value from 0 to 1
+    var vis2_h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) *0.8;
+    var vis2_padding = 70;
 
 
-    /*for (var i = 0; i < vis2_numDataPoints; i++) {
-      vis2_dataset.push(Math.floor(Math.random() * vis2_maxValue));
-    } // add data to the array*/
 
     var vis2_xScale = d3.scaleBand() //generate an ordinal scale for x-axis
       //normally domain(["high","med","low"])
-      .domain(d3.range(vis2_dataset.length)) //calculate the range of the domain
+      .domain(d3.range(vis2_dataset_pg.length)) //calculate the range of the domain
       .rangeRound([vis2_padding, vis2_w - vis2_padding]) // specify the size of the range the domain needs to be mapped 
       // round the bandwidths to whole number	
       .paddingInner(0.05); // to generate a padding value of 5% of the bandwidth
@@ -568,39 +603,55 @@ function vis2_execution() {
     var vis2_yScale = d3.scaleLinear() //quantitative data
       .domain([
         0,
-        1100
+        d3.max(vis2_dataset_pg, function(d) { return +d.High; })
       ]) //domain of y
       .range([vis2_h - vis2_padding, vis2_padding]) // specify the size of the range the domain needs to be mapped 
     // round the bandwidths to whole number	
     // range of y 
 
 
-
+d3.select('#vis2_id').remove();
 
     var vis2_svg = d3.select("#chart2")
       .append("svg")
       .attr("width", vis2_w)
-      .attr("height", vis2_h);
+      .attr("height", vis2_h).attr("id","vis2_id");
+
+//Create "Year" on  X axis
+vis2_svg.append('text')
+    .attr('x', vis2_w/2 - 20)
+    .attr('y', vis2_h - 15)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '15px')
+    .text('Type of energy');
+
+//Create "Food waste per capita (kg/year)" on Y Axis
+vis2_svg.append('text')
+    .attr('x', -(vis2_h / 2))
+    .attr('y', vis2_padding - 35)
+    .attr('text-anchor', 'middle')
+    .attr('transform', 'rotate(270)')
+    .style('font-size', '15px')
+    .text('Tonnes of CO2 emission');
 
     var vis2_xAxis = d3.axisBottom()
-      .ticks(vis2_dataset.length) /*controlling the tick* - interval */
-      .scale(vis2_xScale).tickFormat(i => vis2_dataset[i].Technology);
+      .ticks(vis2_dataset_pg.length) /*controlling the tick* - interval */
+      .scale(vis2_xScale).tickFormat(i => vis2_dataset_pg[i].Technology);
 
     var vis2_yAxis = d3.axisLeft()
-      .ticks(10) /*controlling the tick* - interval */
+      .ticks(8) /*controlling the tick* - interval */
       .scale(vis2_yScale);
 
 
 
     vis2_svg.selectAll("rect") /*select all rect even though they dont yet exist*/
-      .data(vis2_dataset) /*count + prepare data values*/
+      .data(vis2_dataset_pg) /*count + prepare data values*/
       .enter() /*create a new plce holder element for each bit of data*/
       .append("rect") /* append a rect element to match each placeholder*/
       .attr("x", function(d, i) {
         return vis2_xScale(i);
       }) /* to scale value of x*/
       .attr("y", function(d) {
-        console.log(d.Mean);
         return vis2_yScale(d.Mean);
       }) /* value of y - positions*/
       .attr("width", vis2_xScale.bandwidth()) /* barpadding to create space bw each column*/
@@ -609,18 +660,18 @@ function vis2_execution() {
       }) /* extend the height for an easy look*/
       .attr("fill", function(d) {if (+d.Mean>200) return "red"; return "green";})
 	.on("mouseover", function(d, i ) { //when the mouse hovers
+
 			   		d3.select(this)
 			   			.attr("fill", "orange"); //that column turns orange
 					
 					//get bar position
 					var xPosition = parseFloat(d3.select(this).attr("x"))+ vis2_xScale.bandwidth() / 2 - 7;
 					var yPosition = parseFloat(d3.select(this).attr("y")) + 30;
-			
 
 					vis2_svg.append("text")
 					   .attr("id", "vis2_tooltip")
-					   .attr("x", xPosition - (d.Mean.length/2)*4)
-					   .attr("y", function (){ if (yPosition > vis2_h - vis2_padding) return yPosition - 35; return yPosition;})
+					   .attr("x", xPosition - (d.Mean.length/2)*4)//;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
+					   .attr("y", vis2_h - vis2_padding + 32) //vis2_yScale(d.Low) +35)//function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
 					   .attr("font-weight", "bold")
 					   .text(d.Mean);
 			})
@@ -633,7 +684,7 @@ function vis2_execution() {
 					d3.select("#vis2_tooltip").remove(); //remove value of column when mouse no longer hovers
 		});
     /* shape color*/
-
+//set up axis
     vis2_svg.append("g")
       .attr("transform", "translate(0," + (vis2_h - vis2_padding) + ")") //position for x axis
       .call(vis2_xAxis); //draw x axis
@@ -642,7 +693,7 @@ function vis2_execution() {
       .attr("class", "y axis") //assign class for y axis
       .attr("transform", "translate(" + vis2_padding + ",0)") //position for y axis
       .call(vis2_yAxis); //draw y axis
-
+// set up axis
 // Legendssssssssss
 
               vis2_svg.selectAll('dotsss')
@@ -650,7 +701,7 @@ function vis2_execution() {
                 .enter()
                 .append("circle")
                 .attr("cx", (d, i) => vis2_w - vis2_padding - 100) //pie_h + 100
-                .attr("cy", (d,i) => 50 + 30*i) //(d,i) => 150 + i*(40)
+                .attr("cy", (d,i) => 100 + 30*i) //(d,i) => 150 + i*(40)
                 .attr("r", 8)
                 .style("fill", function(d,i) {if (i==1) return "green"; return "red";});
 
@@ -659,215 +710,83 @@ function vis2_execution() {
                 .enter()
                 .append("text")
                 .attr("x", vis2_w - vis2_padding + 20 -100) //pie_h + 100
-                .attr("y", (d, i) => 55 + 30 * i) //(d,i) => 150 + i*(40)
+                .attr("y", (d, i) => 105 + 30 * i) //(d,i) => 150 + i*(40)
                 .attr("font-size", "12px")
                 .text(d => d);
+                
+                /*----------set up highlow--------------*/
+                
+		
+ vis2_svg.selectAll("vis2_lowhigh_lineeee") /*select all rect even though they dont yet exist*/
+      .data(vis2_dataset_pg) /*count + prepare data values*/
+      .enter() /*create a new plce holder element for each bit of data*/
+      .append("line") /* append a rect element to match each placeholder*/
+      .attr("class", (d,i) => "vis2_lowhigh" + i) //set class
+      .attr("x1", function(d, i) { console.log(vis2_xScale(i) + vis2_xScale.bandwidth()/2);
+        return vis2_xScale(i) + vis2_xScale.bandwidth()/2;
+      }) /* to scale value of x*/
+      .attr("y1", function(d) {
+        return vis2_yScale(d.Low);
+      }) /* value of y - positions*/
+      .attr("x2", function(d, i) {
+        return vis2_xScale(i) + vis2_xScale.bandwidth()/2;
+      }) /* to scale value of x*/
+      .attr("y2", function(d) {
+        return vis2_yScale(d.High);
+      }) /* value of y - positions*/
+      
+		.style("stroke", "black") //set color for line
+		.style("stroke-width", 1); //set width for line
+		//.style("stroke-dasharray", 2); //set gap for line
+	
+vis2_svg.selectAll("vis2_lowhigh_high") /*select all rect even though they dont yet exist*/
+      .data(vis2_dataset_pg) /*count + prepare data values*/
+      .enter() /*create a new plce holder element for each bit of data*/
+      .append("line") /* append a rect element to match each placeholder*/
+      .attr("class", (d,i) => "vis2_lowhigh_high" + i) //set class
+      .attr("x1", function(d, i) { console.log(vis2_xScale(i) + vis2_xScale.bandwidth()/2-2);
+        return vis2_xScale(i) + vis2_xScale.bandwidth()/2-2;
+      }) /* to scale value of x*/
+      .attr("y1", function(d) {
+        return vis2_yScale(d.High);
+      }) /* value of y - positions*/
+      .attr("x2", function(d, i) {
+        return vis2_xScale(i) + vis2_xScale.bandwidth()/2 +2;
+      }) /* to scale value of x*/
+      .attr("y2", function(d) {
+        return vis2_yScale(d.High);
+      }) /* value of y - positions*/
+      
+		.style("stroke", "black") //set color for line
+		.style("stroke-width", 1); //set width for line
+		//.style("stroke-dasharray", 2); //set gap for line
+	
 
+	
+vis2_svg.selectAll("vis2_lowhigh_high") /*select all rect even though they dont yet exist*/
+      .data(vis2_dataset_pg) /*count + prepare data values*/
+      .enter() /*create a new plce holder element for each bit of data*/
+      .append("line") /* append a rect element to match each placeholder*/
+      .attr("class", (d,i) => "vis2_lowhigh_high" + i) //set class
+      .attr("x1", function(d, i) { console.log(vis2_xScale(i) + vis2_xScale.bandwidth()/2-2);
+        return vis2_xScale(i) + vis2_xScale.bandwidth()/2-2;
+      }) /* to scale value of x*/
+      .attr("y1", function(d) {
+        return vis2_yScale(d.Low);
+      }) /* value of y - positions*/
+      .attr("x2", function(d, i) {
+        return vis2_xScale(i) + vis2_xScale.bandwidth()/2 +2;
+      }) /* to scale value of x*/
+      .attr("y2", function(d) {
+        return vis2_yScale(d.Low);
+      }) /* value of y - positions*/
+      
+		.style("stroke", "black") //set color for line
+		.style("stroke-width", 1); //set width for line
+		//.style("stroke-dasharray", 2); //set gap for line
 
-
-
+                /*----------set up highlow--------------*/
 //Legends
-
-
-
-
-
-  });
-
-
-
-
-
-
+    
 }
-
-
-//multiple
-//Varun Dewan 2019
-var $ = {
-   get: function(selector){ 
-      var ele = document.querySelectorAll(selector);
-      for(var i = 0; i < ele.length; i++){
-         this.init(ele[i]);
-      }
-      return ele;
-   },
-   template: function(html){
-      var template = document.createElement('div');
-      template.innerHTML = html.trim();
-      return this.init(template.childNodes[0]);
-   },
-   init: function(ele){
-      ele.on = function(event, func){ this.addEventListener(event, func); }
-      return ele;
-   }
-};
-
-//Build the plugin
-var drop = function(info){var o = {
-   options: info.options,
-   selected: info.selected || [],
-   preselected: info.preselected || [],
-   open: false,
-   html: {
-      select: $.get(info.selector)[0],
-      options: $.get(info.selector + ' option'),
-      parent: undefined,
-   },
-   init: function(){
-      //Setup Drop HTML
-      this.html.parent = $.get(info.selector)[0].parentNode
-      this.html.drop = $.template('<div class="drop"></div>')
-      this.html.dropDisplay = $.template('<div class="drop-display">Display</div>')
-      this.html.dropOptions = $.template('<div class="drop-options">Options</div>')
-      this.html.dropScreen = $.template('<div class="drop-screen"></div>')
-      
-      this.html.parent.insertBefore(this.html.drop, this.html.select)
-      this.html.drop.appendChild(this.html.dropDisplay)
-      this.html.drop.appendChild(this.html.dropOptions)
-      this.html.drop.appendChild(this.html.dropScreen)
-      //Hide old select
-      this.html.drop.appendChild(this.html.select);
-      
-      //Core Events
-      var that = this;
-      this.html.dropDisplay.on('click', function(){ that.toggle() });
-      this.html.dropScreen.on('click', function(){ that.toggle() });
-      //Run Render
-      this.load()
-      this.preselect()
-      this.render();
-   },
-   toggle: function(){
-      this.html.drop.classList.toggle('open');
-   },
-   addOption: function(e, element){ 
-      var index = Number(element.dataset.index);
-      this.clearStates()
-      this.selected.push({
-         index: Number(index),
-         state: 'add',
-         removed: false
-      })
-      this.options[index].state = 'remove';
-      this.render()
-   },
-   removeOption: function(e, element){
-      e.stopPropagation();
-      this.clearStates()
-      var index = Number(element.dataset.index);
-      this.selected.forEach(function(select){
-         if(select.index == index && !select.removed){
-            select.removed = true
-            select.state = 'remove'
-         }
-      })
-      this.options[index].state = 'add'
-      this.render();
-   },
-   load: function(){
-      this.options = [];
-      for(var i = 0; i < this.html.options.length; i++){
-         var option = this.html.options[i]
-         this.options[i] = {
-            html:  option.innerHTML,
-            value: option.value,
-            selected: option.selected,
-            state: ''
-         }
-      }
-   },
-   preselect: function(){
-      var that = this;
-      this.selected = [];
-      this.preselected.forEach(function(pre){
-         that.selected.push({
-            index: pre,
-            state: 'add',
-            removed: false
-         })
-         that.options[pre].state = 'remove';
-      })
-   },
-   render: function(){
-      this.renderDrop()
-      this.renderOptions()
-   },
-   renderDrop: function(){ 
-      var that = this;
-      var parentHTML = $.template('<div></div>')
-      this.selected.forEach(function(select, index){ 
-         var option = that.options[select.index];
-         var childHTML = $.template('<span class="item '+ select.state +'">'+ option.html +'</span>')
-         var childCloseHTML = $.template(
-            '<i class="material-icons btnclose" data-index="'+select.index+'">&#xe5c9;</i></span>')
-         childCloseHTML.on('click', function(e){ that.removeOption(e, this) })
-         childHTML.appendChild(childCloseHTML)
-         parentHTML.appendChild(childHTML)
-      })
-      this.html.dropDisplay.innerHTML = ''; 
-      this.html.dropDisplay.appendChild(parentHTML)
-   },
-   renderOptions: function(){  
-      var that = this;
-      var parentHTML = $.template('<div></div>')
-      this.options.forEach(function(option, index){
-         var childHTML = $.template(
-            '<a data-index="'+index+'" class="'+option.state+'">'+ option.html +'</a>')
-         childHTML.on('click', function(e){ that.addOption(e, this) })
-         parentHTML.appendChild(childHTML)
-      })
-      this.html.dropOptions.innerHTML = '';
-      this.html.dropOptions.appendChild(parentHTML)
-   },
-   clearStates: function(){
-      var that = this;
-      this.selected.forEach(function(select, index){ 
-         select.state = that.changeState(select.state)
-      })
-      this.options.forEach(function(option){ 
-         option.state = that.changeState(option.state)
-      })
-   },
-   changeState: function(state){
-      switch(state){
-         case 'remove':
-            return 'hide'
-         case 'hide':
-            return 'hide'
-         default:
-            return ''
-       }
-   },
-   isSelected: function(index){
-      var check = false
-      this.selected.forEach(function(select){ 
-         if(select.index == index && select.removed == false) check = true
-      })
-      return check
-   }
-}; o.init(); return o;}
-
-
-//Set up some data
-var options = [
-   { html: 'cats', value: 'cats' },
-   { html: 'fish', value: 'fish' },
-   { html: 'squids', value: 'squids' },
-   { html: 'cats', value: 'whales' },
-   { html: 'cats', value: 'bikes' },
-];
-
-var myDrop = new drop({
-   selector:  '#myMulti',
-   preselected: [0, 2]
-});
- myDrop.toggle();
-
-
-//multiple
-
-
-
-
-// Visualisation 2
+//button handle
