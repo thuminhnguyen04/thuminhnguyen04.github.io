@@ -356,7 +356,7 @@ function executeMap(map) {
                   ])
                   .enter()
                   .append('circle')
-                  .attr('cx', (d, i) => 200 * i + 10) //pie_h + 100
+                  .attr('cx', (d, i) => 180 * i + 10) //pie_h + 100
                   .attr('cy', 20) //(d,i) => 150 + i*(40)
                   .attr('r', 10)
                   .style('fill', (d, i) => pie_color(i));
@@ -369,9 +369,9 @@ function executeMap(map) {
                   ])
                   .enter()
                   .append('text')
-                  .attr('x', (d, i) => 200 * i + 25) //pie_h + 100
+                  .attr('x', (d, i) => 180 * i + 25) //pie_h + 100
                   .attr('y', 28) //(d,i) => 150 + i*(40)
-                  .attr('font-size', '15px')
+                  .attr('font-size', '12px')
                   .text(d => d);
 
                 //add label text
