@@ -914,6 +914,7 @@ function vis3_applyFilter() {
     if (vis3_filter[parseInt(i / 13)]) vis3_dataset_pg.push(vis3_dataset_f[i]);
   }
 
+  var vis3_color_array = [];
   var vis3_padding = 50;
   var vis3_xScale = d3
     .scaleLinear() //set up scale of x Axis - time
@@ -950,7 +951,7 @@ function vis3_applyFilter() {
   var vis3_svg = d3
     .select('#chart3')
     .append('svg')
-    .attr('width', vis3_w)
+    .attr('width', vis3_w + w * 0.2)
     .attr('height', vis3_h)
     .attr('id', 'vis3_id');
 
@@ -974,7 +975,53 @@ function vis3_applyFilter() {
     .text('Tonnes of CO2 emission per capita');
 
 
+//legends----------------
 
+// Legendssssssssss
+
+  //Create a legend for the graph
+    vis3_svg
+    .append('rect')
+    .attr('x', vis3_w + 10)
+    .attr('y', 42)
+    .attr('height', (parseInt(vis3_dataset_pg.length/13)+1) * 18)
+    .attr('width', 155)
+    .style('fill', 'none')
+    .style('stroke', 'black');
+
+ 
+  vis3_svg
+    .append('text')
+    .attr('x', vis3_w + 10)
+    .attr('y', 22)
+    .text('Legends')
+    .style('font-size', '20px')
+    .attr('alignment-baseline', 'middle')
+    .style('font-weight', 1000);
+
+  for (let i =0;i<parseInt(vis3_dataset_pg.length/13);i++){
+    vis3_color_array.push(pie_color(i));
+  vis3_svg
+   
+    .append('rect')
+    .attr('x', vis3_w + 20)
+    .attr('y', 54 + 18 * i)
+    .attr('width', 25)
+    .attr('height', 15)
+    .attr('stroke', 'black')
+    .style('fill', pie_color(i));
+
+     vis3_svg
+   
+    .append('text')
+    .attr('x', vis3_w + 20 + 25 + 5 )
+    .attr('y', 54 + 18 * i + 14)
+    .text(vis3_dataset_pg[i*13].Country)
+             .style('fill', pie_color(i))    .style('font-weight', 550);
+;
+
+  }
+  //---------------legends---------------//
 
 
 
@@ -997,11 +1044,11 @@ function vis3_applyFilter() {
         //datum is used to bind the data to a single path element
         .attr('id', 'line' + parseInt(i / 13)) //set line to
         .attr('d', vis3_line) //set line to d
-        .style('stroke', pie_color(i / 13)) //CSS
+        .style('stroke', vis3_color_array[parseInt(i / 13)]) //CSS
         .style('stroke-width', 2) //width of line
         .style('fill', 'none')
         .on('mouseover', function () {
-d3.select(this).style('stroke', pie_color(i / 13)) //CSS
+d3.select(this).style('stroke', vis3_color_array[parseInt(i / 13)]) //CSS
         .style('stroke-width', 5) //width of line
         .style('fill', 'none')
 .raise();
@@ -1027,12 +1074,12 @@ d3.select(this).style('stroke', pie_color(i / 13)) //CSS
                 vis3_yScale(+vis3_dataset_pg[i-1].CO2) + 15
             ) //(d,i) => 150 + i*(40)
             .text(vis3_dataset_pg[i].Country)
-            .style('fill', pie_color(i / 13))
+            .style('fill', vis3_color_array[parseInt(i / 13)])
             .attr('font-size', '15px');
         
         })
         .on('mouseout', function () {
-d3.select(this).style('stroke', pie_color(i / 13)) //CSS
+d3.select(this).style('stroke', vis3_color_array[parseInt(i / 13)]) //CSS
         .style('stroke-width', 2) //width of line
         .style('fill', 'none')
 .raise();
