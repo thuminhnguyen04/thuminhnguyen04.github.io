@@ -891,10 +891,18 @@ vis2_svg
 
 /*------Vis3-----------*/
 var vis3_dataset_f = [];
+var vis3_dataset_Rf = [[-0.1709,19.6374,0.9287,'very strong inverse relationship'],
+[-0.07672,11.6977,0.7867,'very strong inverse relationship'],
+[-2.0152,10.8977,0.1898,'moderate inverse relationship'],
+[-0.0225,5.3011,0.231,'moderate inverse relationship'],
+];
 function vis3_execution() {
   //13 records/region
   //read data
+    
+  
   d3.csv('data/Vis3_V3.csv').then(function (data) {
+
     //Set input domain for color scale
     for (let j = 0; j < data.length; j++) {
       //   parseFloat(d3.entries(data[parseInt(event.target.value) - 1999])[j].value)
@@ -909,11 +917,15 @@ function vis3_applyFilter() {
   var vis3_w = w * 0.7;
   var vis3_h = h;
   var vis3_dataset_pg = [];
+  var vis3_dataset_Rpg = [];
 
   for (let i = 0; i < vis3_dataset_f.length; i++) {
     if (vis3_filter[parseInt(i / 13)]) vis3_dataset_pg.push(vis3_dataset_f[i]);
   }
-
+  
+for (let i = 0; i < vis3_dataset_Rf.length; i++) {
+    if (vis3_filter[i]) vis3_dataset_Rpg.push(vis3_dataset_Rf[i]);
+  }
   var vis3_color_array = [];
   var vis3_padding = 50;
   var vis3_xScale = d3
@@ -983,7 +995,7 @@ function vis3_applyFilter() {
     vis3_svg
     .append('rect')
     .attr('x', vis3_w + 10)
-    .attr('y', 42)
+    .attr('y', 30+42)
     .attr('height', (parseInt(vis3_dataset_pg.length/13)+1) * 18)
     .attr('width', 155)
     .style('fill', 'none')
@@ -993,7 +1005,7 @@ function vis3_applyFilter() {
   vis3_svg
     .append('text')
     .attr('x', vis3_w + 10)
-    .attr('y', 22)
+    .attr('y',30+ 22)
     .text('Legends')
     .style('font-size', '20px')
     .attr('alignment-baseline', 'middle')
@@ -1005,7 +1017,7 @@ function vis3_applyFilter() {
    
     .append('rect')
     .attr('x', vis3_w + 20)
-    .attr('y', 54 + 18 * i)
+    .attr('y', 30+54 + 18 * i)
     .attr('width', 25)
     .attr('height', 15)
     .attr('stroke', 'black')
@@ -1015,7 +1027,7 @@ function vis3_applyFilter() {
    
     .append('text')
     .attr('x', vis3_w + 20 + 25 + 5 )
-    .attr('y', 54 + 18 * i + 14)
+    .attr('y',30+ 54 + 18 * i + 14)
     .text(vis3_dataset_pg[i*13].Country)
              .style('fill', pie_color(i))    .style('font-weight', 550);
 ;
@@ -1048,6 +1060,62 @@ function vis3_applyFilter() {
         .style('stroke-width', 2) //width of line
         .style('fill', 'none')
         .on('mouseover', function () {
+
+
+          //regression
+
+
+
+
+  vis3_svg
+   
+    .append('rect')            .attr('class', 'vis3_dots_country_highlight')
+
+    .attr('x', vis3_w + 10)
+    .attr('y', 30+54 + 18 * parseInt(vis3_dataset_pg.length/13) + 50 )
+    .attr('width', 155)
+    .attr('height', 100)
+    .attr('stroke', 'black')
+    .style('fill', 'none');
+
+     vis3_svg
+   
+    .append('text')            .attr('class', 'vis3_dots_country_highlight')
+
+    .attr('x', vis3_w + 20 )
+    .attr('y', 30+54 + 18 * parseInt(vis3_dataset_pg.length/13) + 50 + 20)
+    .text("Regression Line")
+             .style('fill', vis3_color_array[parseInt(i / 13)])    .style('font-weight', 550);
+
+
+ vis3_svg
+   
+    .append('text')            .attr('class', 'vis3_dots_country_highlight')
+
+    .attr('x', vis3_w + 13 )
+    .attr('y', 30+54 + 18 * parseInt(vis3_dataset_pg.length/13) + 50 + 20 + 20 + 15)
+    .text("y = " + vis3_dataset_Rpg[parseInt(i / 13)][0] + "x" + " + " +
+         vis3_dataset_Rpg[parseInt(i / 13)][1]).style('font-weight', 550).attr('font-size', '14px');
+
+
+vis3_svg
+   
+    .append('text')            .attr('class', 'vis3_dots_country_highlight')
+
+    .attr('x', vis3_w + 13 )
+    .attr('y', 30+54 + 18 * parseInt(vis3_dataset_pg.length/13) + 50 + 20+ 20 + 20 + 25)
+        .text("R square: " + vis3_dataset_Rpg[parseInt(i / 13)][2]).style('font-weight', 550).attr('font-size', '14px');
+   // .text("There is " +
+     //    vis3_dataset_Rpg[parseInt(i / 13)].comment + "between CO2 emission per capita and the share of electricity from renewables");
+
+
+
+
+
+
+
+
+          //regression
 d3.select(this).style('stroke', vis3_color_array[parseInt(i / 13)]) //CSS
         .style('stroke-width', 5) //width of line
         .style('fill', 'none')
@@ -1124,7 +1192,7 @@ d3.selectAll(".vis3_dots_country_highlight").remove();
             var y_next_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j + 1].CO2);
             
             if (Math.abs(x_next_position-x_position) < 40 && 
-                    Math.abs(y_next_position-y_position) < 7.5)   
+                    Math.abs(y_next_position-y_position) < 8.5)   
                     continue;
             if (x_next_position >= x_position)
                 {
