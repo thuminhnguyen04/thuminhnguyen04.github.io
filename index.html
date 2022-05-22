@@ -79,9 +79,9 @@
 	<h2>Graph 2</h2>
 	<h3> CO2 Emissions of each type of Energy per its lifecycle</h3>
 	<br>
-			<legend><strong><em>Select which energy your would like to include:</em></strong></legend>
-			<p><em>
-			
+			<legend><strong><em>Select which energy your would like to include:</strong></legend>
+			<p><strong>Non-renewable energy:</strong>
+			<br>
 			<label for="lignite">Lignite</label> 
 				<input type="checkbox" id="lignite" name="category[]" value="lignite" checked="checked"/>
 			
@@ -93,7 +93,11 @@
 			
 			<label for="naturalgas">Natural Gas</label> 
 				<input type="checkbox" id="naturalgas" name="category[]" value="naturalgas" checked="checked"/>
-			</em></p><p><em><label for="solar">Solar PV</label> 
+			
+<br>
+			<strong>Renewable energy: </strong>
+			<br>
+			<label for="solar">Solar PV</label> 
 				<input type="checkbox" id="solar" name="category[]" value="solar" checked="checked"/>
 			
 			<label for="biomass">Biomass</label> 
@@ -123,68 +127,21 @@
 			<label for="australia">Australia</label> 
 				<input type="checkbox" id="australia" name="category[]" value="australia" checked="checked"/>
 			
-			<label for="US">US</label> 
-				<input type="checkbox" id="US" name="category[]" value="US" checked="checked"/>
-			
-			<label for="germany">Germany</label> 
+						<label for="germany">Germany</label> 
 				<input type="checkbox" id="germany" name="category[]" value="germany" checked="checked"/>
-			</em></p><p><em>
+			
 			<label for="singapore">Singapore</label> 
 				<input type="checkbox" id="singapore" name="category[]" value="singapore" checked="checked"/>
-			<label for="france">France</label> 
-				<input type="checkbox" id="france" name="category[]" value="france" checked="checked"/>
-			
-			<label for="canada">Canada</label> 
-				<input type="checkbox" id="canada" name="category[]" value="canada" checked="checked"/>
-			
-<label for="world">World</label> 
+			<label for="world">World</label> 
 				<input type="checkbox" id="world" name="category[]" value="world" checked="checked"/>
 			
 			</em></p>
-<br>
-<p><em><strong>From &nbsp&nbsp&nbsp - &nbsp&nbsp&nbsp&nbsp&nbsp to&nbsp&nbsp&nbsp&nbsp</em></strong></p>
-<p>
-<label for="membership"></label>
-	<select name="membership" id="vis3_year_s">
- 	<option value="2009" selected>2009</option>
- 	<option value="2010">2010</option>
- 	<option value="2011">2011</option>
- 	<option value="2012">2012</option>
- 	<option value="2013">2013</option>
-	<option value="2014">2014</option>
-	<option value="2015">2015</option>
-	<option value="2016">2016</option>
-	<option value="2017">2017</option>
-
-	<option value="2018">2018</option>
-	<option value="2019">2019</option>
-	<option value="2020">2020</option>
-	<option value="2021">2021</option>
-	</select>
-	<select name="membership" id="vis3_year_e">
- 	<option value="2009" selected>2009</option>
- 	<option value="2010">2010</option>
- 	<option value="2011">2011</option>
- 	<option value="2012">2012</option>
- 	<option value="2013">2013</option>
-	<option value="2014">2014</option>
-	<option value="2015">2015</option>
-	<option value="2016">2016</option>
-	<option value="2017">2017</option>
-
-	<option value="2018">2018</option>
-	<option value="2019">2019</option>
-	<option value="2020">2020</option>
-	<option value="2021">2021</option>
-	</select></p>
-
 
    <p> <button type="button" id="vis3_go" onclick="vis3_goFilter()"><strong>APPLY</strong></button>    
      &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  <button type="button" id="vis3_reset" onclick="vis3_resetFilter()"><strong>RESET</strong></button>
 	</p>
 </div>
 	<p id="chart3"></p>
-
 	<footer>
 	<p>COS30045 Data Visualisation<br>Semester 1 2022</p>
 	</footer>

@@ -23,7 +23,7 @@ var svg;
 function init() {
   //Define quantize scale to sort data values into saturation of color
   vis2_execution();
-vis3_execution();
+  vis3_execution();
   svg = d3
     .select('#chart')
     .append('svg')
@@ -346,6 +346,8 @@ function executeMap(map) {
                   .attr('width', 450)
                   .attr('height', 35)
                   .attr('class', 'meme');
+
+               
                 pie_legends
                   .selectAll('dotsss')
                   .data([
@@ -681,14 +683,53 @@ function applyFilter() {
       var xPosition =
         parseFloat(d3.select(this).attr('x')) + vis2_xScale.bandwidth() / 2 - 7;
       var yPosition = parseFloat(d3.select(this).attr('y')) + 30;
-
+ 
       vis2_svg
         .append('text')
-        .attr('id', 'vis2_tooltip')
-        .attr('x', xPosition - (d.Mean.length / 2) * 4) //;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
-        .attr('y', vis2_h - vis2_padding + 32) //vis2_yScale(d.Low) +35)//function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
+        .attr('class', 'vis2_tooltip')
+        .attr('x', function() 
+		{
+			if (+d.Mean <= 200) 
+				return xPosition + 10; 
+			return xPosition - (d.Mean.length / 2) * 4;}
+
+	)
+		 //;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
+        .attr('y', 
+		function() 
+		{
+			if (+d.Mean <= 200) 
+				return yPosition - 30; 
+			return vis2_yScale(d.Low) +35;}
+
+	)	//vis2_h - vis2_padding + 32) //function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
         .attr('font-weight', 'bold')
         .text(d.Mean);
+
+	
+vis2_svg
+        .append('text')
+        .attr('class', 'vis2_tooltip')
+        .attr('x', xPosition - d.Mean.length*5) //;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
+        .attr('y', vis2_yScale(d.High) - 5) //vis2_yScale(d.Low) +35)//function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
+        .attr('font-weight', 'bold')
+	.attr("font-size","12px")
+        .text("(" + d.Low + "," + d.High + ")");
+
+/*vis2_svg
+        .append('text')
+        .attr('class', 'vis2_tooltip')
+        .attr('x', 
+	) //;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
+        .attr('y', function() 
+		{
+			if (+d.Mean <= 200) 
+				return vis2_yScale(d.Low) - 5; 
+			return vis2_yScale(d.Low) + 15;}) //vis2_yScale(d.Low) +35)//function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
+        .attr('font-weight', 'bold')
+        .text(d.Low);*/
+
+
     })
     .on('mouseout', function () {
       //when the mouse no longer hovers
@@ -700,7 +741,10 @@ function applyFilter() {
           if (+d.Mean > 200) return 'red';
           return 'green';
         }); //that column turns back to default color
-      d3.select('#vis2_tooltip').remove(); //remove value of column when mouse no longer hovers
+      while (!d3.select('.vis2_tooltip').empty()) {
+    d3.select('.vis2_tooltip').remove();
+  }
+ //remove value of column when mouse no longer hovers
     });
   /* shape color*/
   //set up axis
@@ -717,13 +761,36 @@ function applyFilter() {
   // set up axis
   // Legendssssssssss
 
+  //Create a legend for the graph
+    vis2_svg
+    .append('rect')
+    .attr('x', (3 * vis2_w) / 4 - 10)
+    .attr('y', 42)
+    .attr('height', 4 * 18)
+    .attr('width', 155)
+    .style('fill', 'none')
+    .style('stroke', 'black');
+
+ 
+  vis2_svg
+    .append('text')
+    .attr('x', (3 * vis2_w) / 4 - 10)
+    .attr('y', 22)
+    .text('Legends')
+    .style('font-size', '20px')
+    .attr('alignment-baseline', 'middle')
+    .style('font-weight', 1000);
+
+
+
+  /*------------------Legends------------*/
   vis2_svg
     .selectAll('dotsss')
     .data(['non-renewable energy', 'renewable energy (Unit: GWh)'])
     .enter()
     .append('circle')
-    .attr('cx', (d, i) => vis2_w - vis2_padding - 100) //pie_h + 100
-    .attr('cy', (d, i) => 100 + 30 * i) //(d,i) => 150 + i*(40)
+    .attr('cx', (d, i) => (3 * vis2_w) / 4 + 5) //pie_h + 100
+    .attr('cy', (d, i) => 60 + 30 * i) //(d,i) => 200 + i*(40)
     .attr('r', 8)
     .style('fill', function (d, i) {
       if (i == 1) return 'green';
@@ -735,8 +802,8 @@ function applyFilter() {
     .data(['non-renewable energy', 'renewable energy'])
     .enter()
     .append('text')
-    .attr('x', vis2_w - vis2_padding + 20 - 100) //pie_h + 100
-    .attr('y', (d, i) => 105 + 30 * i) //(d,i) => 150 + i*(40)
+    .attr('x', (3 * vis2_w) / 4 + 20) //pie_h + 100
+    .attr('y', (d, i) => 60 + 5 + 30 * i) //(d,i) => 200 + i*(40)
     .attr('font-size', '12px')
     .text(d => d);
 
@@ -751,7 +818,6 @@ function applyFilter() {
     .append('line') /* append a rect element to match each placeholder*/
     .attr('class', (d, i) => 'vis2_lowhigh' + i) //set class
     .attr('x1', function (d, i) {
-      console.log(vis2_xScale(i) + vis2_xScale.bandwidth() / 2);
       return vis2_xScale(i) + vis2_xScale.bandwidth() / 2;
     }) /* to scale value of x*/
     .attr('y1', function (d) {
@@ -777,7 +843,6 @@ function applyFilter() {
     .append('line') /* append a rect element to match each placeholder*/
     .attr('class', (d, i) => 'vis2_lowhigh_high' + i) //set class
     .attr('x1', function (d, i) {
-      console.log(vis2_xScale(i) + vis2_xScale.bandwidth() / 2 - 2);
       return vis2_xScale(i) + vis2_xScale.bandwidth() / 2 - 2;
     }) /* to scale value of x*/
     .attr('y1', function (d) {
@@ -803,7 +868,6 @@ function applyFilter() {
     .append('line') /* append a rect element to match each placeholder*/
     .attr('class', (d, i) => 'vis2_lowhigh_high' + i) //set class
     .attr('x1', function (d, i) {
-      console.log(vis2_xScale(i) + vis2_xScale.bandwidth() / 2 - 2);
       return vis2_xScale(i) + vis2_xScale.bandwidth() / 2 - 2;
     }) /* to scale value of x*/
     .attr('y1', function (d) {
@@ -825,72 +889,72 @@ function applyFilter() {
 }
 //button handle
 
-
 /*------Vis3-----------*/
 var vis3_dataset_f = [];
-function vis3_execution()
-{
-    
-//13 records/region
+function vis3_execution() {
+  //13 records/region
   //read data
-  d3.csv('data/Vis3_V2.csv').then(function (data) {
+  d3.csv('data/Vis3_V3.csv').then(function (data) {
     //Set input domain for color scale
     for (let j = 0; j < data.length; j++) {
       //   parseFloat(d3.entries(data[parseInt(event.target.value) - 1999])[j].value)
 
       vis3_dataset_f.push(d3.entries(data)[j].value);
-
     }
-	vis3_applyFilter();
-
-});
+    vis3_applyFilter();
+  });
 }
 
-function vis3_applyFilter()
-{
-    var vis3_w = w*0.7;
-    var vis3_h = h;
-    	var vis3_dataset_pg = [];
+function vis3_applyFilter() {
+  var vis3_w = w * 0.7;
+  var vis3_h = h;
+  var vis3_dataset_pg = [];
 
-
-    for (let i = 0; i < vis3_dataset_f.length; i++) {
-    if (vis3_filter[parseInt(i/13)]) vis3_dataset_pg.push(vis3_dataset_f[i]);
+  for (let i = 0; i < vis3_dataset_f.length; i++) {
+    if (vis3_filter[parseInt(i / 13)]) vis3_dataset_pg.push(vis3_dataset_f[i]);
   }
-  
-    var vis3_padding = 50;
-    var vis3_xScale = d3.scaleLinear() //set up scale of x Axis - time
-			.domain([	
-				d3.min(vis3_dataset_pg, function(d) { return +d.rshare; }),//get earliest date
-				d3.max(vis3_dataset_pg, function(d) { return +d.rshare; }) //get ealiert year
-			])
-			.range([vis3_padding,w-vis3_padding]);
 
-	var vis3_yScale = d3.scaleLinear()
-			.domain([
-				d3.min(vis3_dataset_pg, function(d) { return +d.CO2; }),
-				d3.max(vis3_dataset_pg, function(d) { return +d.CO2; })
-			])
-			.range([h-vis3_padding, vis3_padding]);
+  var vis3_padding = 50;
+  var vis3_xScale = d3
+    .scaleLinear() //set up scale of x Axis - time
+    .domain([
+      d3.min(vis3_dataset_pg, function (d) {
+        return +d.rshare;
+      }), //get earliest date
+      d3.max(vis3_dataset_pg, function (d) {
+        return +d.rshare;
+      }), //get ealiert year
+    ])
+    .range([vis3_padding, vis3_w - vis3_padding]);
 
-	
-	//Define axes
-	var vis3_xAxis = d3.axisBottom()
-		   .scale(vis3_xScale)
-		   .ticks(10);
+  var vis3_yScale = d3
+    .scaleLinear()
+    .domain([
+      d3.min(vis3_dataset_pg, function (d) {
+        return +d.CO2;
+      }),
+      d3.max(vis3_dataset_pg, function (d) {
+        return +d.CO2;
+      }),
+    ])
+    .range([vis3_h - vis3_padding, vis3_padding]);
 
-	//Define Y axis
-	var vis3_yAxis = d3.axisLeft()
-		   .scale(vis3_yScale)
-		   .ticks(10);
+  //Define axes
+  var vis3_xAxis = d3.axisBottom().scale(vis3_xScale).ticks(10);
+
+  //Define Y axis
+  var vis3_yAxis = d3.axisLeft().scale(vis3_yScale).ticks(10);
   d3.select('#vis3_id').remove();
 
-	//Create SVG element
-	var vis3_svg = d3.select("#chart3")
-			.append("svg")
-			.attr("width", vis3_w)
-			.attr("height", vis3_h).attr("id","vis3_id");
+  //Create SVG element
+  var vis3_svg = d3
+    .select('#chart3')
+    .append('svg')
+    .attr('width', vis3_w)
+    .attr('height', vis3_h)
+    .attr('id', 'vis3_id');
 
-	//Create "Year" on  X axis
+  //Create "Year" on  X axis
   vis3_svg
     .append('text')
     .attr('x', vis3_w / 2 - 20)
@@ -909,57 +973,313 @@ function vis3_applyFilter()
     .style('font-size', '15px')
     .text('Tonnes of CO2 emission per capita');
 
-var vis3_line = d3.line()
-		.x(function(d){return vis3_xScale(+d.rshare);})
-		.y(function(d){return vis3_yScale(+d.CO2);});
-var tmp_array=[];
-
-	for (let i=0;i<vis3_dataset_pg.length;i++)
-	{
 
 
-		if (i%13==12) 
-		{
-		vis3_svg.append("path") //append path
-		.datum(tmp_array) //data is used to bind each single data value to a different html element
-				//datum is used to bind the data to a single path element
-		.attr("class", "line") //set line to class
-		.attr("d", vis3_line) //set line to d
-		.style("stroke", pie_color(i/13)) //CSS
-		.style("stroke-width", 2) //width of line
-		.style("fill", "none");
-		
-		vis3_svg
-    .append('text')
-    .attr('x', 100)
-    .attr('y', 100 + i)
-    .style('font-size', '15px')
+
+
+
+/*-------legends-------*/
+  var vis3_line = d3
+    .line()
+    .x(function (d) {
+      return vis3_xScale(+d.rshare);
+    })
+    .y(function (d) {
+      return vis3_yScale(+d.CO2);
+    });
+  var tmp_array = [];
+
+  for (let i = 0; i < vis3_dataset_pg.length; i++) {
+    if (i % 13 == 12) {
+      vis3_svg
+        .append('path') //append path
+        .datum(tmp_array) //data is used to bind each single data value to a different html element
+        //datum is used to bind the data to a single path element
+        .attr('id', 'line' + parseInt(i / 13)) //set line to
+        .attr('d', vis3_line) //set line to d
+        .style('stroke', pie_color(i / 13)) //CSS
+        .style('stroke-width', 2) //width of line
+        .style('fill', 'none')
+        .on('mouseover', function () {
+d3.select(this).style('stroke', pie_color(i / 13)) //CSS
+        .style('stroke-width', 5) //width of line
+        .style('fill', 'none')
+.raise();
+                       d3.selectAll('.vis3_dots_'+parseInt(i/13)).attr('r', 2).raise();
+
+        vis3_svg
+
+            .selectAll('vis3_dots_remove' + i)
+            .data('wow')
+
+            .enter()
+            .append('text')
+            .attr('class', 'vis3_dots_country_highlight')
+            .attr(
+              'x',
+              function (){if (vis3_dataset_pg[i].Code == "SGP" && vis3_dataset_pg.length > 15) return vis3_xScale(+vis3_dataset_pg[i-1].rshare) + 20; 
+                return vis3_xScale(+vis3_dataset_pg[i-1].rshare) -
+                15;}
+            ) //pie_h + 100
+            .attr(
+              'y',
+              d =>
+                vis3_yScale(+vis3_dataset_pg[i-1].CO2) + 15
+            ) //(d,i) => 150 + i*(40)
+            .text(vis3_dataset_pg[i].Country)
+            .style('fill', pie_color(i / 13))
+            .attr('font-size', '15px');
+        
+        })
+        .on('mouseout', function () {
+d3.select(this).style('stroke', pie_color(i / 13)) //CSS
+        .style('stroke-width', 2) //width of line
+        .style('fill', 'none')
+.raise();
+d3.selectAll(".vis3_dots_country_highlight").remove();
+
+          d3.selectAll('.vis3_dots_'+parseInt(i/13)).attr('r', 1).raise();
+        });
+    //dotsss
+    var tmp_line_id = parseInt(i/13);
+          
+            
+          for (let j = 0; j < 12; j++) {
+ var x_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].rshare);
+            var y_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].CO2);
+            vis3_svg
+
+              .selectAll('vis3_dots' + tmp_line_id + j)
+              .data('wow')
+
+              .enter()
+              .append('circle')
+              .attr('class', 'vis3_dots_' + tmp_line_id)
+              .attr('cx', x_position)
+               //pie_h + 100
+              .attr('cy', y_position)
+              //(d,i) => 150 + i*(40)
+              .attr('r', 1)
+              .style('fill', 'black');
+          }  
+           for (let j = 0; j < 12; j++) {
+               
+               
+                var x_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].rshare);
+            var y_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].CO2);
+            var year_text_padding_x = 5;
+            var year_text_padding_y = 0;
+            if (j==6) continue;
+           if (j==0) { year_text_padding_x = 0; year_text_padding_y = 15};
+            
+            if (j  != 11 && j!=0) {
+            var x_next_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j + 1].rshare);
+            var y_next_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j + 1].CO2);
+            
+            if (Math.abs(x_next_position-x_position) < 40 && 
+                    Math.abs(y_next_position-y_position) < 7.5)   
+                    continue;
+            if (x_next_position >= x_position)
+                {
+                    if (y_next_position <= y_position)
+                    {
+                        year_text_padding_y += 10;
+                    }
+                    else
+                    {
+                        year_text_padding_y -= 2;
+                    }
+                }
+            else
+                {
+                    if (y_next_position <= y_position)
+                    {
+                    	year_text_padding_y -= 2;
+                    }
+                    else
+                    {
+                        year_text_padding_y += 10;
+                    }
+                }
+            }
+            
+            vis3_svg
+              .selectAll('vis3_dots_year' + tmp_line_id + j)
+              .data('wow')
+
+              .enter()
+              .append('text')
+              .attr('class', 'vis3_dots_ne')
+              .attr(
+                'x', x_position  + year_text_padding_x) //pie_h + 100
+              .attr('y', y_position+ year_text_padding_y) //(d,i) => 150 + i*(40)
+              .text(vis3_dataset_pg[+tmp_line_id * 13 + j].Year)
+              .attr('font-size', 10)  	.style("font-weight",800);
+
+//paint-order: stroke;
+   // stroke: #000000;
+          }
+
+          
+
     
-    .text(vis3_dataset_pg[i].Country).style('fill',pie_color(i/13));
+    
+    //dotsss
+    
+      
+      tmp_array = [];
+      continue;
+    }
 
-		
-console.log(pie_color(i/13), ' color ', vis3_dataset_pg[i].Country, tmp_array.length);
-		tmp_array = [];
-			continue;
-		}
+    tmp_array.push(vis3_dataset_pg[i]);
 
-
-			tmp_array.push(vis3_dataset_pg[i]);
-	}
+  }
 
 
 	
-	//Create axes
-	vis3_svg.append("g")
-		.attr("class", "axis")
-		.attr("transform", "translate(0," + (vis3_h - vis3_padding) + ")")
-		.call(vis3_xAxis);
 
-	vis3_svg.append("g")
-		.attr("class", "axis")
-		.attr("transform", "translate(" + vis3_padding + ",0)")
-		.call(vis3_yAxis);
+  //Create axes
+  vis3_svg
+    .append('g')
+    .attr('class', 'axis')
+    .attr('transform', 'translate(0,' + (vis3_h - vis3_padding) + ')')
+    .call(vis3_xAxis);
 
+  vis3_svg
+    .append('g')
+    .attr('class', 'axis')
+    .attr('transform', 'translate(' + vis3_padding + ',0)')
+    .call(vis3_yAxis);
+var mouse_x, mouse_y;
+vis3_svg
+    .on('mousemove', function() {mouse_x = d3.event.pageX;
+                                 console.log('y' + d3.event.pageY);
+console.log(mouse_x);
+mouse_y = 2255 -(d3.event.pageY);
+while (!d3.select('.vis3_line').empty()) {
+                  d3.select('.vis3_line').remove();
+                }
+if (mouse_x>=215 && mouse_x <=215 + vis3_w - 2*vis3_padding && mouse_y>=0 && mouse_y<=vis3_h - 2*vis3_padding )
+{
+	//var pos_line = mouse_x / vis3_xScale.bandwidth;
+vis3_svg
+    .selectAll(
+      'vis3_line'
+    ) /*select all rect even though they dont yet exist*/
+    .data("wow") /*count + prepare data values*/
+    .enter() /*create a new plce holder element for each bit of data*/
+    .append('line') /* append a rect element to match each placeholder*/
+    .attr('class', "vis3_line") //set class
+    .attr('x1', function (d, i) {
+      return mouse_x - 185 + 20;
+    }) /* to scale value of x*/
+    .attr('y1', vis3_padding) /* value of y - positions*/
+    .attr('x2', function (d, i) {
+      return mouse_x - 185 + 20;
+    }) /* to scale value of x*/
+    .attr('y2', vis3_h-vis3_padding)
+     /* value of y - positions*/
+
+    .style('stroke', 'black') //set color for line
+    .style('stroke-width', 1).style("stroke-dasharray", 2); //set width for line
+
+vis3_svg
+    .selectAll(
+      'vis3_line_y'
+    ) /*select all rect even though they dont yet exist*/
+    .data("wow") /*count + prepare data values*/
+    .enter() /*create a new plce holder element for each bit of data*/
+    .append('line') /* append a rect element to match each placeholder*/
+    .attr('class', "vis3_line") //set class
+    .attr('x1', function (d, i) {
+      return vis3_padding;
+    }) /* to scale value of x*/
+    .attr('y1', -mouse_y + 290) /* value of y - positions*/
+    .attr('x2', function (d, i) {
+      return vis3_w - vis3_padding;
+    }) /* to scale value of x*/
+    .attr('y2', -mouse_y + 290)
+     /* value of y - positions*/
+
+    .style('stroke', 'black') //set color for line
+    .style('stroke-width', 1).style("stroke-dasharray", 2); //set width for line
+
+/*vis3_svg
+
+              .append('circle')
+              .attr('class', 'vis3_line')
+              .attr('cx', mouse_x - 185)
+               //pie_h + 100
+              .attr('cy', -mouse_y + 290)
+              //(d,i) => 150 + i*(40)
+              .attr('r', 3)
+              .style('fill', 'red');*/
+
+vis3_svg
+  .append("rect")
+    .attr('class', "vis3_line") //set class
+  .attr("x",function() { if (mouse_x >=vis3_w - 2*vis3_padding + 100) return mouse_x - 185 + 20 + 10 - 110;return mouse_x - 185 + 20 + 10;} )
+  .attr("y", -mouse_y + 290 -10 - 15)
+  .attr("height", 20)
+  .attr("width", 95)
+  .style("fill", " #D3D3D3")
+	. style("opacity","0.5")
+  .style("stroke", "black");
+
+
+vis3_svg
+    .selectAll(
+      'vis3_line_text_y'
+    ) /*select all rect even though they dont yet exist*/
+    .data("wow") /*count + prepare data values*/
+    .enter() /*create a new plce holder element for each bit of data*/
+    .append('text') /* append a rect element to match each placeholder*/
+    .attr('class', "vis3_line") //set class
+    .attr('x', function() { if (mouse_x >=vis3_w - 2*vis3_padding + 100) return mouse_x - 185 + 20 + 10 - 110;return mouse_x - 185 + 20 + 10;}) /* to scale value of x*/
+    .attr('y', -mouse_y + 315 - 25 - 10)
+     /* value of y - positions*/
+	.text(function(){var tmp_x = Math.round(
+
+	((mouse_x - 215)/
+		(vis3_w - 2*vis3_padding) 
+		* ( d3.max(vis3_dataset_pg, function (d) {
+       		 return +d.rshare;})
+-  d3.min(vis3_dataset_pg, function (d) {
+
+        return +d.rshare;
+      })
+
+
+	)
+		 + d3.min(vis3_dataset_pg, function (d) {
+        return +d.rshare;})
+	)*100)/100;
+
+var tmp_y = Math.round(
+
+	((mouse_y-2)/
+		(vis3_h - 2*vis3_padding) 
+		* ( d3.max(vis3_dataset_pg, function (d) {
+       		 return +d.CO2;})
+-  d3.min(vis3_dataset_pg, function (d) {
+        return +d.CO2;
+      })
+
+
+	)
+		 + d3.min(vis3_dataset_pg, function (d) {
+        return +d.CO2;})
+	)*100)/100;
+
+return '(' + tmp_x + ',' + tmp_y + ')';
+
+});
+console.log(vis3_xScale[1]-vis3_xScale[0]);
+	
+}
+   
+
+ });
 
 }
 
@@ -967,36 +1287,27 @@ function vis3_goFilter() {
   var flag = true;
   var countryList = [
     'australia',
-    'US',
     'germany',
     'singapore',
-    'france',
-
-    'canada',
-    'world'
+     'world',
   ];
   for (let i = 0; i < countryList.length; i++) {
     vis3_filter[i] = document.getElementById(countryList[i]).checked;
     flag = flag & !vis3_filter[i];
-  }
+  } 
   if (flag) vis3_resetFilter();
   else vis3_applyFilter();
 }
 var vis3_filter = [];
-for (let i = 0; i < 7; i++) {
+for (let i = 0; i < 4 ; i++) {
   vis3_filter.push(1);
 }
 function vis3_resetFilter() {
-    
- var countryList = [
+  var countryList = [
     'australia',
-    'US',
-    'germany',
+        'germany',
     'singapore',
-    'france',
-
-    'canada',
-    'world'
+    'world',
   ];
   for (let i = 0; i < countryList.length; i++) {
     document.getElementById(countryList[i]).checked = 1;
@@ -1004,6 +1315,5 @@ function vis3_resetFilter() {
   }
   vis3_applyFilter();
 }
-
 
 /*------Vis3-----------*/

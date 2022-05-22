@@ -60,11 +60,11 @@
 	
 	}
 	
-	
+	a{	  margin: 20px;
+}
 	button, a {
 	  text-decoration:none;
 	  color: black;
-	  margin: 20px;
 	  line-height: 28pt;
 	  padding: 10px 20px;
 	  background: #ffa580;
