@@ -1200,14 +1200,21 @@ d3.selectAll(".vis3_dots_country_highlight").remove();
 var mouse_x, mouse_y;
 vis3_svg
     .on('mousemove', function() {mouse_x = d3.event.pageX;
-                                 console.log('y' + d3.event.pageY);
-console.log(mouse_x);
-mouse_y = 2255 -(d3.event.pageY);
+ var rect = document.getElementById('chart3').getBoundingClientRect();
+
+mouse_y = d3.event.pageY - vis3_padding - (rect.top  + document.documentElement.scrollTop);
+                                 
+
+//console.log(rect.top  + document.documentElement.scrollTop, rect.right, rect.bottom, rect.left);
 while (!d3.select('.vis3_line').empty()) {
                   d3.select('.vis3_line').remove();
                 }
-if (mouse_x>=215 && mouse_x <=215 + vis3_w - 2*vis3_padding && mouse_y>=0 && mouse_y<=vis3_h - 2*vis3_padding )
+mouse_x = mouse_x - 0.05*w -vis3_padding + 8;
+if (mouse_x>=0 && mouse_x <=vis3_w - 2*vis3_padding && mouse_y>=0 && mouse_y<=vis3_h - 2*vis3_padding )
 {
+         console.log("x " + (mouse_x));
+                                 console.log('y ' + mouse_y);
+
 	//var pos_line = mouse_x / vis3_xScale.bandwidth;
 vis3_svg
     .selectAll(
@@ -1218,11 +1225,11 @@ vis3_svg
     .append('line') /* append a rect element to match each placeholder*/
     .attr('class', "vis3_line") //set class
     .attr('x1', function (d, i) {
-      return mouse_x - 185 + 20;
+      return mouse_x + vis3_padding;
     }) /* to scale value of x*/
     .attr('y1', vis3_padding) /* value of y - positions*/
     .attr('x2', function (d, i) {
-      return mouse_x - 185 + 20;
+      return mouse_x + vis3_padding;
     }) /* to scale value of x*/
     .attr('y2', vis3_h-vis3_padding)
      /* value of y - positions*/
@@ -1241,11 +1248,11 @@ vis3_svg
     .attr('x1', function (d, i) {
       return vis3_padding;
     }) /* to scale value of x*/
-    .attr('y1', -mouse_y + 290) /* value of y - positions*/
+    .attr('y1', mouse_y + vis3_padding) /* value of y - positions*/
     .attr('x2', function (d, i) {
       return vis3_w - vis3_padding;
     }) /* to scale value of x*/
-    .attr('y2', -mouse_y + 290)
+    .attr('y2', mouse_y + vis3_padding)
      /* value of y - positions*/
 
     .style('stroke', 'black') //set color for line
@@ -1265,8 +1272,8 @@ vis3_svg
 vis3_svg
   .append("rect")
     .attr('class', "vis3_line") //set class
-  .attr("x",function() { if (mouse_x >=vis3_w - 2*vis3_padding + 100) return mouse_x - 185 + 20 + 10 - 110;return mouse_x - 185 + 20 + 10;} )
-  .attr("y", -mouse_y + 290 -10 - 15)
+  .attr("x",function() { if (mouse_x >=vis3_w - 2*vis3_padding - 100) return mouse_x + vis3_padding  - 110;return mouse_x + vis3_padding + 5;} )
+  .attr("y", mouse_y + vis3_padding - 25)
   .attr("height", 20)
   .attr("width", 95)
   .style("fill", " #D3D3D3")
@@ -1275,19 +1282,14 @@ vis3_svg
 
 
 vis3_svg
-    .selectAll(
-      'vis3_line_text_y'
-    ) /*select all rect even though they dont yet exist*/
-    .data("wow") /*count + prepare data values*/
-    .enter() /*create a new plce holder element for each bit of data*/
     .append('text') /* append a rect element to match each placeholder*/
     .attr('class', "vis3_line") //set class
-    .attr('x', function() { if (mouse_x >=vis3_w - 2*vis3_padding + 100) return mouse_x - 185 + 20 + 10 - 110;return mouse_x - 185 + 20 + 10;}) /* to scale value of x*/
-    .attr('y', -mouse_y + 315 - 25 - 10)
+    .attr('x', function() { if (mouse_x >=vis3_w - 2*vis3_padding - 100) return mouse_x + vis3_padding  - 110;return mouse_x + vis3_padding + 6;}) /* to scale value of x*/
+    .attr('y', mouse_y + vis3_padding - 10)
      /* value of y - positions*/
 	.text(function(){var tmp_x = Math.round(
 
-	((mouse_x - 215)/
+	((mouse_x)/
 		(vis3_w - 2*vis3_padding) 
 		* ( d3.max(vis3_dataset_pg, function (d) {
        		 return +d.rshare;})
@@ -1304,7 +1306,7 @@ vis3_svg
 
 var tmp_y = Math.round(
 
-	((mouse_y-2)/
+	((vis3_h - 2*vis3_padding - mouse_y)/
 		(vis3_h - 2*vis3_padding) 
 		* ( d3.max(vis3_dataset_pg, function (d) {
        		 return +d.CO2;})
@@ -1321,7 +1323,6 @@ var tmp_y = Math.round(
 return '(' + tmp_x + ',' + tmp_y + ')';
 
 });
-console.log(vis3_xScale[1]-vis3_xScale[0]);
 	
 }
    
