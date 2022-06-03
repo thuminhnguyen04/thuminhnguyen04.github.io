@@ -38,14 +38,20 @@
 
 		
 </div>
- 		
+ 	
+	
 <div class="graph1" id="graph1">
+<p><strong><a href="#graph3" class="prevVis"> &larr; GRAPH 3</a></strong></p>
 	<h2>Graph 1</h2>
 	<br>	
 	<h3>Total annual energy consumption in Australian per financial year (Terawatt hours)</h3>
-	<br>
+	
+<br>
+<p><strong><a href="#graph2" class="nextVis"> GRAPH 2 &rarr;</a></strong></p>
+
 	<label for="membership"><em><strong>Filter by year:</em></strong></label>
-	<select name="membership" id="map1_select_year">
+	
+<select name="membership" id="map1_select_year">
  	<option value="2009" selected>2009</option>
  	<option value="2010">2010</option>
  	<option value="2011">2011</option>
@@ -61,6 +67,8 @@
 	<option value="2020">2020</option>
 	<option value="2021">2021</option>
 	</select>
+
+
 </div>
 
 <div class="details">
@@ -70,14 +78,14 @@
     <p id="chart1_pie"></p>
     <p id="chart1_pie_legends"></p>	
     <button type="button" id="hide" onclick="hideButton()"><strong>Hide Me!</strong></button>
-
-
 </div>
 	<p id="chart"></p>
 
 <div class="graph1" id="graph2">
+<p><strong><a href="#graph1" class="prevVis"> &larr; GRAPH 1</a></strong></p>
 	<h2>Graph 2</h2>
 	<h3> CO2 Emissions of each type of Energy per its lifecycle</h3>
+
 	<br>
 			<legend><strong><em>Select which energy your would like to include:</strong></legend>
 			<p><strong>Non-renewable energy:</strong>
@@ -111,16 +119,23 @@
 				<input type="checkbox" id="wind" name="category[]" value="wind" checked="checked"/>
 			
 			</em></p>
+<p><strong><a href="#graph3" class="nextVis"> GRAPH 3 &rarr;</a></strong></p>
+
    <p> <button type="button" id="go" onclick="goFilter()"><strong>APPLY</strong></button>    
      &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  <button type="button" id="reset" onclick="resetFilter()"><strong>RESET</strong></button>
 	</p>
+
+
 </div>
 	<p id="chart2"></p>
 
 <div class="graph1" id="graph3">
+<p><strong><a href="#graph2" class="prevVis"> &larr; GRAPH 2</a></strong></p>
+
 	<h2>Graph 3</h2>
-	<h3>CO2 emissions per capita vs. share of electricity from renewables</h3>
-		<br>
+	<h3>Relationship between CO2 emissions per capita and the share of electricity from renewables</h3>
+		
+<br>
 			<legend><strong><em>Select which countries you would like to include:</em></strong></legend>
 			<p><em>
 			
@@ -136,10 +151,12 @@
 				<input type="checkbox" id="world" name="category[]" value="world" checked="checked"/>
 			
 			</em></p>
+<p><strong><a href="#graph1" class="nextVis"> GRAPH 1 &rarr;</a></strong></p>
 
    <p> <button type="button" id="vis3_go" onclick="vis3_goFilter()"><strong>APPLY</strong></button>    
      &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  <button type="button" id="vis3_reset" onclick="vis3_resetFilter()"><strong>RESET</strong></button>
 	</p>
+
 </div>
 	<p id="chart3"></p>
 	<footer>

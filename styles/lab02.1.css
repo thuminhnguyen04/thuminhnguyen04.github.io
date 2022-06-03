@@ -125,3 +125,24 @@
     select {
         float:left;margin: 0px 10px 0px 10px;
     }
+
+.nextVis{
+	 align-items: right;
+	  justify-items: right;
+	right:50px;
+	background: #f8f4d0;
+padding: 0px 5px 0px 5px;
+	margin:0px;
+	position:absolute;
+	font-size: 10px;
+}
+
+.prevVis{
+	 align-items: left;
+	  justify-items: left;
+	left:50px;
+	background: #f8f4d0;
+padding: 0px 5px 0px 5px;
+	position:absolute;
+	font-size: 10px;
+}

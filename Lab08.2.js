@@ -1,8 +1,9 @@
 var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
   h =
-    Math.max(document.documentElement.clientHeight, window.innerHeight || 0) *
-    0.6;
-
+  Math.max(document.documentElement.clientHeight, window.innerHeight || 0) *
+  0.6;
+var vis3_currentPoint;
+var vis3_XYboxOpacity = '0.5';
 var pie_w = h / 2; //set width and height for svg
 var pie_h = pie_w;
 var year;
@@ -37,7 +38,7 @@ function init() {
   //.attr("height", h)
   //.attr("fill","grey"); //the area which is not the file will be colored the default color - grey
 
-  var zoom = d3.zoom().on('zoom', function () {
+  var zoom = d3.zoom().on('zoom', function() {
     var transform = d3.zoomTransform(this);
     map.attr('transform', transform);
   });
@@ -186,7 +187,7 @@ function executeMap(map) {
     .projection(projection);
   //Load in agriculture data
   year = 10; //2009
-  d3.csv('data/Map_V4.csv').then(function (data) {
+  d3.csv('data/Map_V4.csv').then(function(data) {
     //Set input domain for color scale
     for (let i = 0; i < 9; i++) {
       emptyArray.push(parseFloat(d3.entries(data[year])[1 + i].value));
@@ -200,7 +201,7 @@ function executeMap(map) {
     //Load in GeoJSON data
     d3.json(
       'https://gist.githubusercontent.com/GerardoFurtado/02aa65e5522104cb692e/raw/8108fbd4103a827e67444381ff594f7df8450411/aust.json'
-    ).then(function (json) {
+    ).then(function(json) {
       //load file json
 
       map
@@ -210,11 +211,11 @@ function executeMap(map) {
         .append('path') //append path
         .attr('d', path) //set path to d
         .attr('stroke', 'white')
-        .attr('id', function (d, i) {
+        .attr('id', function(d, i) {
           return 'path' + (i + 1); // d.properties.STATE_NAME;
         })
         .style('font-weight', 600)
-        .style('fill', function (d, i) {
+        .style('fill', function(d, i) {
           return color(emptyArray[i]);
           //get data value, just for convenience in processing
           /*var value = d.properties.value;
@@ -225,7 +226,7 @@ function executeMap(map) {
             return '#ffd8d8';
           }*/
         })
-        .on('mouseover', function (d, i) {
+        .on('mouseover', function(d, i) {
           //Raise the state/territory and colour stroke red
           for (let m = 0; m <= 10; m++) {}
 
@@ -257,7 +258,7 @@ function executeMap(map) {
             .attr('transform', 'translate(' + path.centroid(d) + ')')
             .attr('text-anchor', 'middle')
             .attr('dy', 15)
-            .text(function (d) {
+            .text(function(d) {
               if (emptyArray[i] == 0) return '!';
               else return emptyArray[i];
             })
@@ -273,7 +274,7 @@ function executeMap(map) {
           if (+d.properties.STATE_CODE <= 7) {
             /*--------Read file----------*/
             d3.csv('data/Chart' + d.properties.STATE_CODE + '.csv')
-              .then(function (data) {
+              .then(function(data) {
                 pie_dataset = [];
 
                 //Set input domain for color scale
@@ -330,12 +331,12 @@ function executeMap(map) {
                   .attr('class', 'tooltip3')
                   .transition()
                   .duration(1000)
-                  .attr('fill', function (d, i) {
+                  .attr('fill', function(d, i) {
                     return pie_color(i); //use color scale --> each segment has each distinguish color
                   })
                   .attr(
                     'd',
-                    function (d, i) {
+                    function(d, i) {
                       return arc(d, i);
                     } //call arc segment
                   );
@@ -347,7 +348,7 @@ function executeMap(map) {
                   .attr('height', 35)
                   .attr('class', 'meme');
 
-               
+
                 pie_legends
                   .selectAll('dotsss')
                   .data([
@@ -379,10 +380,10 @@ function executeMap(map) {
                   .append('text') //pie generator generates an array containing all path data and data value
                   .attr('class', 'tooltip3')
 
-                  .text(function (d) {
+                  .text(function(d) {
                     return d.value;
                   }) //to access the value inside an array
-                  .attr('transform', function (d) {
+                  .attr('transform', function(d) {
                     return (
                       'translate(' +
                       (arc.centroid(d)[0] - 18) +
@@ -396,7 +397,7 @@ function executeMap(map) {
                 // -> transform + arc.centroid to find the middle of an irregular shape.
                 /*-----------Pie chart ----------------------*/
               })
-              .catch(function (error) {
+              .catch(function(error) {
                 while (!d3.select('.meme').empty()) {
                   d3.select('.meme').remove();
                 }
@@ -422,7 +423,7 @@ function executeMap(map) {
           //-----------
         })
 
-        .on('mouseout', function (d) {
+        .on('mouseout', function(d) {
           d3.select(this).attr('stroke', 'white').attr('stroke-width', '1px');
 
           d3.select('.tooltip1').remove();
@@ -446,17 +447,17 @@ function executeMap(map) {
         .append('g')
         .classed('state', true)
         .append('text')
-        .attr('id', function (d) {
+        .attr('id', function(d) {
           return 'text' + d.properties.STATE_CODE;
         })
 
         .attr('fill', 'black')
-        .attr('transform', function (d) {
+        .attr('transform', function(d) {
           return 'translate(' + path.centroid(d) + ')';
         })
         .attr('text-anchor', 'middle')
         .attr('dy', 15)
-        .text(function (d) {
+        .text(function(d) {
           return d.properties.STATE_NAME;
         })
         .style('font-weight', 600)
@@ -480,7 +481,7 @@ function filterYear(map) {
     // ??? get selected TEXT in or outside event handler
 
     /*------------ Update color --------*/
-    d3.csv('data/Map_V4.csv').then(function (data) {
+    d3.csv('data/Map_V4.csv').then(function(data) {
       //Set input domain for color scale
       emptyArray = [];
       for (let j = 1; j <= 9; j++) {
@@ -522,7 +523,7 @@ function vis2_execution() {
   vis2_dataset_f = []; //creating an empty array
 
   //read data
-  d3.csv('data/Vis2_V1.csv').then(function (data) {
+  d3.csv('data/Vis2_V1.csv').then(function(data) {
     //Set input domain for color scale
     vis2_dataset_f = [];
     for (let j = 0; j < data.length; j++) {
@@ -562,6 +563,7 @@ var filter = [];
 for (let i = 0; i < 9; i++) {
   filter.push(1);
 }
+
 function resetFilter() {
   var energyList = [
     'lignite',
@@ -580,6 +582,7 @@ function resetFilter() {
   }
   applyFilter();
 }
+
 function applyFilter() {
   var vis2_dataset_pg = [];
   for (let i = 0; i < vis2_dataset_f.length; i++) {
@@ -605,7 +608,7 @@ function applyFilter() {
     .scaleLinear() //quantitative data
     .domain([
       0,
-      d3.max(vis2_dataset_pg, function (d) {
+      d3.max(vis2_dataset_pg, function(d) {
         return +d.High;
       }),
     ]) //domain of y
@@ -657,24 +660,24 @@ function applyFilter() {
     .data(vis2_dataset_pg) /*count + prepare data values*/
     .enter() /*create a new plce holder element for each bit of data*/
     .append('rect') /* append a rect element to match each placeholder*/
-    .attr('x', function (d, i) {
+    .attr('x', function(d, i) {
       return vis2_xScale(i);
     }) /* to scale value of x*/
-    .attr('y', function (d) {
+    .attr('y', function(d) {
       return vis2_yScale(d.Mean);
     }) /* value of y - positions*/
     .attr(
       'width',
       vis2_xScale.bandwidth()
     ) /* barpadding to create space bw each column*/
-    .attr('height', function (d) {
+    .attr('height', function(d) {
       return vis2_h - vis2_padding - vis2_yScale(d.Mean);
     }) /* extend the height for an easy look*/
-    .attr('fill', function (d) {
+    .attr('fill', function(d) {
       if (+d.Mean > 200) return 'red';
       return 'green';
     })
-    .on('mouseover', function (d, i) {
+    .on('mouseover', function(d, i) {
       //when the mouse hovers
 
       d3.select(this).attr('fill', 'orange'); //that column turns orange
@@ -683,68 +686,68 @@ function applyFilter() {
       var xPosition =
         parseFloat(d3.select(this).attr('x')) + vis2_xScale.bandwidth() / 2 - 7;
       var yPosition = parseFloat(d3.select(this).attr('y')) + 30;
- 
+
       vis2_svg
         .append('text')
         .attr('class', 'vis2_tooltip')
-        .attr('x', function() 
-		{
-			if (+d.Mean <= 200) 
-				return xPosition + 10; 
-			return xPosition - (d.Mean.length / 2) * 4;}
+        .attr('x', function() {
+            if (+d.Mean <= 200)
+              return xPosition + 10;
+            return xPosition - (d.Mean.length / 2) * 4;
+          }
 
-	)
-		 //;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
-        .attr('y', 
-		function() 
-		{
-			if (+d.Mean <= 200) 
-				return yPosition - 30; 
-			return vis2_yScale(d.Low) +35;}
+        )
+        //;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
+        .attr('y',
+          function() {
+            if (+d.Mean <= 200)
+              return yPosition - 30;
+            return vis2_yScale(d.Low) + 35;
+          }
 
-	)	//vis2_h - vis2_padding + 32) //function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
+        ) //vis2_h - vis2_padding + 32) //function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
         .attr('font-weight', 'bold')
         .text(d.Mean);
 
-	
-vis2_svg
+
+      vis2_svg
         .append('text')
         .attr('class', 'vis2_tooltip')
-        .attr('x', xPosition - d.Mean.length*5) //;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
+        .attr('x', xPosition - d.Mean.length * 7) //;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
         .attr('y', vis2_yScale(d.High) - 5) //vis2_yScale(d.Low) +35)//function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
         .attr('font-weight', 'bold')
-	.attr("font-size","12px")
-        .text("(" + d.Low + "," + d.High + ")");
+        .attr("font-size", "12px")
+        .text("L:" + d.Low + " H:" + d.High);
 
-/*vis2_svg
-        .append('text')
-        .attr('class', 'vis2_tooltip')
-        .attr('x', 
-	) //;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
-        .attr('y', function() 
-		{
-			if (+d.Mean <= 200) 
-				return vis2_yScale(d.Low) - 5; 
-			return vis2_yScale(d.Low) + 15;}) //vis2_yScale(d.Low) +35)//function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
-        .attr('font-weight', 'bold')
-        .text(d.Low);*/
+      /*vis2_svg
+              .append('text')
+              .attr('class', 'vis2_tooltip')
+              .attr('x', 
+      	) //;function (){ if (positionOfText == "green") return xPosition + 10; return xPosition - (d.Mean.length/2)*4;})
+              .attr('y', function() 
+      		{
+      			if (+d.Mean <= 200) 
+      				return vis2_yScale(d.Low) - 5; 
+      			return vis2_yScale(d.Low) + 15;}) //vis2_yScale(d.Low) +35)//function (){ console.log(+d.Low + 50); if (positionOfText == "green") return yPosition - 35; return vis2_yScale(d.Low) +35;})
+              .attr('font-weight', 'bold')
+              .text(d.Low);*/
 
 
     })
-    .on('mouseout', function () {
+    .on('mouseout', function() {
       //when the mouse no longer hovers
       d3.select(this)
         .transition() //smoother
         .delay(100)
         .duration(1000)
-        .attr('fill', function (d) {
+        .attr('fill', function(d) {
           if (+d.Mean > 200) return 'red';
           return 'green';
         }); //that column turns back to default color
       while (!d3.select('.vis2_tooltip').empty()) {
-    d3.select('.vis2_tooltip').remove();
-  }
- //remove value of column when mouse no longer hovers
+        d3.select('.vis2_tooltip').remove();
+      }
+      //remove value of column when mouse no longer hovers
     });
   /* shape color*/
   //set up axis
@@ -762,7 +765,7 @@ vis2_svg
   // Legendssssssssss
 
   //Create a legend for the graph
-    vis2_svg
+  vis2_svg
     .append('rect')
     .attr('x', (3 * vis2_w) / 4 - 10)
     .attr('y', 42)
@@ -771,7 +774,7 @@ vis2_svg
     .style('fill', 'none')
     .style('stroke', 'black');
 
- 
+
   vis2_svg
     .append('text')
     .attr('x', (3 * vis2_w) / 4 - 10)
@@ -792,7 +795,7 @@ vis2_svg
     .attr('cx', (d, i) => (3 * vis2_w) / 4 + 5) //pie_h + 100
     .attr('cy', (d, i) => 60 + 30 * i) //(d,i) => 200 + i*(40)
     .attr('r', 8)
-    .style('fill', function (d, i) {
+    .style('fill', function(d, i) {
       if (i == 1) return 'green';
       return 'red';
     });
@@ -817,16 +820,16 @@ vis2_svg
     .enter() /*create a new plce holder element for each bit of data*/
     .append('line') /* append a rect element to match each placeholder*/
     .attr('class', (d, i) => 'vis2_lowhigh' + i) //set class
-    .attr('x1', function (d, i) {
+    .attr('x1', function(d, i) {
       return vis2_xScale(i) + vis2_xScale.bandwidth() / 2;
     }) /* to scale value of x*/
-    .attr('y1', function (d) {
+    .attr('y1', function(d) {
       return vis2_yScale(d.Low);
     }) /* value of y - positions*/
-    .attr('x2', function (d, i) {
+    .attr('x2', function(d, i) {
       return vis2_xScale(i) + vis2_xScale.bandwidth() / 2;
     }) /* to scale value of x*/
-    .attr('y2', function (d) {
+    .attr('y2', function(d) {
       return vis2_yScale(d.High);
     }) /* value of y - positions*/
 
@@ -842,16 +845,16 @@ vis2_svg
     .enter() /*create a new plce holder element for each bit of data*/
     .append('line') /* append a rect element to match each placeholder*/
     .attr('class', (d, i) => 'vis2_lowhigh_high' + i) //set class
-    .attr('x1', function (d, i) {
+    .attr('x1', function(d, i) {
       return vis2_xScale(i) + vis2_xScale.bandwidth() / 2 - 2;
     }) /* to scale value of x*/
-    .attr('y1', function (d) {
+    .attr('y1', function(d) {
       return vis2_yScale(d.High);
     }) /* value of y - positions*/
-    .attr('x2', function (d, i) {
+    .attr('x2', function(d, i) {
       return vis2_xScale(i) + vis2_xScale.bandwidth() / 2 + 2;
     }) /* to scale value of x*/
-    .attr('y2', function (d) {
+    .attr('y2', function(d) {
       return vis2_yScale(d.High);
     }) /* value of y - positions*/
 
@@ -867,16 +870,16 @@ vis2_svg
     .enter() /*create a new plce holder element for each bit of data*/
     .append('line') /* append a rect element to match each placeholder*/
     .attr('class', (d, i) => 'vis2_lowhigh_high' + i) //set class
-    .attr('x1', function (d, i) {
+    .attr('x1', function(d, i) {
       return vis2_xScale(i) + vis2_xScale.bandwidth() / 2 - 2;
     }) /* to scale value of x*/
-    .attr('y1', function (d) {
+    .attr('y1', function(d) {
       return vis2_yScale(d.Low);
     }) /* value of y - positions*/
-    .attr('x2', function (d, i) {
+    .attr('x2', function(d, i) {
       return vis2_xScale(i) + vis2_xScale.bandwidth() / 2 + 2;
     }) /* to scale value of x*/
-    .attr('y2', function (d) {
+    .attr('y2', function(d) {
       return vis2_yScale(d.Low);
     }) /* value of y - positions*/
 
@@ -891,17 +894,19 @@ vis2_svg
 
 /*------Vis3-----------*/
 var vis3_dataset_f = [];
-var vis3_dataset_Rf = [[-0.1709,19.6374,0.9287,'very strong inverse relationship'],
-[-0.07672,11.6977,0.7867,'very strong inverse relationship'],
-[-2.0152,10.8977,0.1898,'moderate inverse relationship'],
-[-0.0225,5.3011,0.231,'moderate inverse relationship'],
+var vis3_dataset_Rf = [
+  [-0.1709, 19.6374, 0.9287, 'very strong inverse relationship'],
+  [-0.07672, 11.6977, 0.7867, 'very strong inverse relationship'],
+  [-0.5622, 13.19, 0.8916, 'very strong inverse relationship'],
+  [-0.05071, 6.019, 0.8206, 'very strong relationship']
 ];
+
 function vis3_execution() {
   //13 records/region
   //read data
-    
-  
-  d3.csv('data/Vis3_V3.csv').then(function (data) {
+
+
+  d3.csv('data/Vis3_V3.csv').then(function(data) {
 
     //Set input domain for color scale
     for (let j = 0; j < data.length; j++) {
@@ -912,18 +917,18 @@ function vis3_execution() {
     vis3_applyFilter();
   });
 }
-
+ var vis3_dataset_Rpg = [];
 function vis3_applyFilter() {
   var vis3_w = w * 0.7;
   var vis3_h = h;
   var vis3_dataset_pg = [];
-  var vis3_dataset_Rpg = [];
-
+ 
+ vis3_dataset_Rpg = [];
   for (let i = 0; i < vis3_dataset_f.length; i++) {
     if (vis3_filter[parseInt(i / 13)]) vis3_dataset_pg.push(vis3_dataset_f[i]);
   }
-  
-for (let i = 0; i < vis3_dataset_Rf.length; i++) {
+
+  for (let i = 0; i < vis3_dataset_Rf.length; i++) {
     if (vis3_filter[i]) vis3_dataset_Rpg.push(vis3_dataset_Rf[i]);
   }
   var vis3_color_array = [];
@@ -931,10 +936,10 @@ for (let i = 0; i < vis3_dataset_Rf.length; i++) {
   var vis3_xScale = d3
     .scaleLinear() //set up scale of x Axis - time
     .domain([
-      d3.min(vis3_dataset_pg, function (d) {
+      d3.min(vis3_dataset_pg, function(d) {
         return +d.rshare;
       }), //get earliest date
-      d3.max(vis3_dataset_pg, function (d) {
+      d3.max(vis3_dataset_pg, function(d) {
         return +d.rshare;
       }), //get ealiert year
     ])
@@ -943,10 +948,10 @@ for (let i = 0; i < vis3_dataset_Rf.length; i++) {
   var vis3_yScale = d3
     .scaleLinear()
     .domain([
-      d3.min(vis3_dataset_pg, function (d) {
+      d3.min(vis3_dataset_pg, function(d) {
         return +d.CO2;
       }),
-      d3.max(vis3_dataset_pg, function (d) {
+      d3.max(vis3_dataset_pg, function(d) {
         return +d.CO2;
       }),
     ])
@@ -967,7 +972,7 @@ for (let i = 0; i < vis3_dataset_Rf.length; i++) {
     .attr('height', vis3_h)
     .attr('id', 'vis3_id');
 
-  //Create "Year" on  X axis
+  //x axis: share of electricity
   vis3_svg
     .append('text')
     .attr('x', vis3_w / 2 - 20)
@@ -976,7 +981,7 @@ for (let i = 0; i < vis3_dataset_Rf.length; i++) {
     .style('font-size', '15px')
     .text('Share of electricity from renewables (%)');
 
-  //Create "Food waste per capita (kg/year)" on Y Axis
+  //y axis: tonnes of CO2
   vis3_svg
     .append('text')
     .attr('x', -(vis3_h / 2))
@@ -987,261 +992,199 @@ for (let i = 0; i < vis3_dataset_Rf.length; i++) {
     .text('Tonnes of CO2 emission per capita');
 
 
-//legends----------------
+  //legends----------------
 
-// Legendssssssssss
+  // Legendssssssssss
 
   //Create a legend for the graph
-    vis3_svg
+  vis3_svg
     .append('rect')
     .attr('x', vis3_w + 10)
-    .attr('y', 30+42)
-    .attr('height', (parseInt(vis3_dataset_pg.length/13)+1) * 18)
+    .attr('y', 30 + 42)
+    .attr('height', (parseInt(vis3_dataset_pg.length / 13) + 1) * 18)
     .attr('width', 155)
     .style('fill', 'none')
     .style('stroke', 'black');
 
- 
+
   vis3_svg
     .append('text')
     .attr('x', vis3_w + 10)
-    .attr('y',30+ 22)
+    .attr('y', 30 + 22)
     .text('Legends')
     .style('font-size', '20px')
     .attr('alignment-baseline', 'middle')
     .style('font-weight', 1000);
 
-  for (let i =0;i<parseInt(vis3_dataset_pg.length/13);i++){
+  for (let i = 0; i < parseInt(vis3_dataset_pg.length / 13); i++) {
     vis3_color_array.push(pie_color(i));
-  vis3_svg
-   
-    .append('rect')
-    .attr('x', vis3_w + 20)
-    .attr('y', 30+54 + 18 * i)
-    .attr('width', 25)
-    .attr('height', 15)
-    .attr('stroke', 'black')
-    .style('fill', pie_color(i));
+    vis3_svg
 
-     vis3_svg
-   
-    .append('text')
-    .attr('x', vis3_w + 20 + 25 + 5 )
-    .attr('y',30+ 54 + 18 * i + 14)
-    .text(vis3_dataset_pg[i*13].Country)
-             .style('fill', pie_color(i))    .style('font-weight', 550);
-;
+      .append('rect')
+      .attr('x', vis3_w + 20)
+      .attr('y', 30 + 54 + 18 * i)
+      .attr('width', 25)
+      .attr('height', 15)
+      .attr('stroke', 'black')
+      .style('fill', pie_color(i));
+
+    vis3_svg
+
+      .append('text')
+      .attr('x', vis3_w + 20 + 25 + 5)
+      .attr('y', 30 + 54 + 18 * i + 14)
+      .text(vis3_dataset_pg[i * 13].Country)
+      .style('fill', pie_color(i)).style('font-weight', 550);;
 
   }
   //---------------legends---------------//
 
 
 
-/*-------legends-------*/
+  /*-------legends-------*/
   var vis3_line = d3
     .line()
-    .x(function (d) {
+    .x(function(d) {
       return vis3_xScale(+d.rshare);
     })
-    .y(function (d) {
+    .y(function(d) {
       return vis3_yScale(+d.CO2);
     });
   var tmp_array = [];
 
   for (let i = 0; i < vis3_dataset_pg.length; i++) {
     if (i % 13 == 12) {
+          var tmp_line_id = parseInt(i / 13);
+
       vis3_svg
         .append('path') //append path
         .datum(tmp_array) //data is used to bind each single data value to a different html element
         //datum is used to bind the data to a single path element
-        .attr('id', 'line' + parseInt(i / 13)) //set line to
+        .attr('id', 'vis3_line' + tmp_line_id) //set line to
         .attr('d', vis3_line) //set line to d
-        .style('stroke', vis3_color_array[parseInt(i / 13)]) //CSS
+        .style('stroke', vis3_color_array[tmp_line_id]) //CSS
         .style('stroke-width', 2) //width of line
         .style('fill', 'none')
-        .on('mouseover', function () {
+        .on('mouseover', function() {
+          tmp_line_id=parseInt(d3.select(this).attr('id')[9]);
+          vis3_lineMouseOver(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color_array, tmp_line_id, vis3_xScale, vis3_yScale)}
+          )
+        .on('mouseout', function()
+            {
+                        tmp_line_id=parseInt(d3.select(this).attr('id')[9]);
+              vis3_lineMouseOut(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color_array, tmp_line_id)}
+           );
+      //dotsss
+tmp_line_id = parseInt(i / 13);
 
+/*-----------dots point of each line------------*/
 
-          //regression
-
-
-
-
-  vis3_svg
-   
-    .append('rect')            .attr('class', 'vis3_dots_country_highlight')
-
-    .attr('x', vis3_w + 10)
-    .attr('y', 30+54 + 18 * parseInt(vis3_dataset_pg.length/13) + 50 )
-    .attr('width', 155)
-    .attr('height', 100)
-    .attr('stroke', 'black')
-    .style('fill', 'none');
-
-     vis3_svg
-   
-    .append('text')            .attr('class', 'vis3_dots_country_highlight')
-
-    .attr('x', vis3_w + 20 )
-    .attr('y', 30+54 + 18 * parseInt(vis3_dataset_pg.length/13) + 50 + 20)
-    .text("Regression Line")
-             .style('fill', vis3_color_array[parseInt(i / 13)])    .style('font-weight', 550);
-
-
- vis3_svg
-   
-    .append('text')            .attr('class', 'vis3_dots_country_highlight')
-
-    .attr('x', vis3_w + 13 )
-    .attr('y', 30+54 + 18 * parseInt(vis3_dataset_pg.length/13) + 50 + 20 + 20 + 15)
-    .text("y = " + vis3_dataset_Rpg[parseInt(i / 13)][0] + "x" + " + " +
-         vis3_dataset_Rpg[parseInt(i / 13)][1]).style('font-weight', 550).attr('font-size', '14px');
-
-
-vis3_svg
-   
-    .append('text')            .attr('class', 'vis3_dots_country_highlight')
-
-    .attr('x', vis3_w + 13 )
-    .attr('y', 30+54 + 18 * parseInt(vis3_dataset_pg.length/13) + 50 + 20+ 20 + 20 + 25)
-        .text("R square: " + vis3_dataset_Rpg[parseInt(i / 13)][2]).style('font-weight', 550).attr('font-size', '14px');
-   // .text("There is " +
-     //    vis3_dataset_Rpg[parseInt(i / 13)].comment + "between CO2 emission per capita and the share of electricity from renewables");
-
-
-
-
-
-
-
-
-          //regression
-d3.select(this).style('stroke', vis3_color_array[parseInt(i / 13)]) //CSS
-        .style('stroke-width', 5) //width of line
-        .style('fill', 'none')
-.raise();
-                       d3.selectAll('.vis3_dots_'+parseInt(i/13)).attr('r', 2).raise();
-
+      for (let j = 0; j < 12; j++) {
+        var x_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].rshare);
+        var y_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].CO2);
         vis3_svg
+        .selectAll("vis3_dataPointForEachLine")
+          .data('wow')
+         .enter()
+          .append('circle')
+          .attr('class', 'vis3_dots_' + tmp_line_id)
+          .attr('id','vis3_dots_'+ (tmp_line_id * 13 + j))
+          .attr('cx', x_position)
+          //pie_h + 100
+          .attr('cy', y_position)
+          //(d,i) => 150 + i*(40)
+          .attr('r', 1)
+          .style('fill', 'black')
+          .on('mouseover', function() {
+            vis3_XYboxOpacity = '1.0';
+           var vis3_currentid = parseInt(d3.select(this).attr('id').substring(10));//[parseFloat(d3.select(this).attr('cx')), parseFloat(d3.select(this).attr('cy'))];
+        vis3_currentPoint=[+vis3_dataset_pg[vis3_currentid].rshare,+vis3_dataset_pg[vis3_currentid].CO2];
+            tmp_line_id=parseInt(d3.select(this).attr('class')[10]);
+          vis3_lineMouseOver(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color_array, tmp_line_id, vis3_xScale, vis3_yScale)}
+          )
+        .on('mouseout', function()
+            {
+            vis3_XYboxOpacity = '0.5';
+                        tmp_line_id=parseInt(d3.select(this).attr('class')[10]);
+              vis3_lineMouseOut(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color_array, tmp_line_id)}
+           );
+      }
+ /*-----------dots point of each line------------*/
+tmp_line_id = parseInt(i / 13);
 
-            .selectAll('vis3_dots_remove' + i)
-            .data('wow')
 
-            .enter()
-            .append('text')
-            .attr('class', 'vis3_dots_country_highlight')
-            .attr(
-              'x',
-              function (){if (vis3_dataset_pg[i].Code == "SGP" && vis3_dataset_pg.length > 15) return vis3_xScale(+vis3_dataset_pg[i-1].rshare) + 20; 
-                return vis3_xScale(+vis3_dataset_pg[i-1].rshare) -
-                15;}
-            ) //pie_h + 100
-            .attr(
-              'y',
-              d =>
-                vis3_yScale(+vis3_dataset_pg[i-1].CO2) + 15
-            ) //(d,i) => 150 + i*(40)
-            .text(vis3_dataset_pg[i].Country)
-            .style('fill', vis3_color_array[parseInt(i / 13)])
-            .attr('font-size', '15px');
+/*-----------year on each line------------*/
+     var printedYearpos = [];
+      for (let j = 0; j < 12; j++) {
+        var x_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].rshare);
+        var y_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].CO2);
+        var year_text_padding_x = 5;
+        var year_text_padding_y = 0;
+        //if (j == 6) continue;
+        if (j == 0) {
+          year_text_padding_x = 0;
+          year_text_padding_y = 15
+        };
+			var flagDraw = true;
+      for (let jj=0;jj<printedYearpos.length;jj++)
+      {
+      	var x_jj_position = printedYearpos[jj][0];
+      	var y_jj_position = printedYearpos[jj][1];
         
-        })
-        .on('mouseout', function () {
-d3.select(this).style('stroke', vis3_color_array[parseInt(i / 13)]) //CSS
-        .style('stroke-width', 2) //width of line
-        .style('fill', 'none')
-.raise();
-d3.selectAll(".vis3_dots_country_highlight").remove();
-
-          d3.selectAll('.vis3_dots_'+parseInt(i/13)).attr('r', 1).raise();
-        });
-    //dotsss
-    var tmp_line_id = parseInt(i/13);
-          
-            
-          for (let j = 0; j < 12; j++) {
- var x_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].rshare);
-            var y_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].CO2);
-            vis3_svg
-
-              .selectAll('vis3_dots' + tmp_line_id + j)
-              .data('wow')
-
-              .enter()
-              .append('circle')
-              .attr('class', 'vis3_dots_' + tmp_line_id)
-              .attr('cx', x_position)
-               //pie_h + 100
-              .attr('cy', y_position)
-              //(d,i) => 150 + i*(40)
-              .attr('r', 1)
-              .style('fill', 'black');
-          }  
-           for (let j = 0; j < 12; j++) {
-               
-               
-                var x_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].rshare);
-            var y_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].CO2);
-            var year_text_padding_x = 5;
-            var year_text_padding_y = 0;
-            if (j==6) continue;
-           if (j==0) { year_text_padding_x = 0; year_text_padding_y = 15};
-            
-            if (j  != 11 && j!=0) {
-            var x_next_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j + 1].rshare);
-            var y_next_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j + 1].CO2);
-            
-            if (Math.abs(x_next_position-x_position) < 40 && 
-                    Math.abs(y_next_position-y_position) < 8.5)   
-                    continue;
-            if (x_next_position >= x_position)
-                {
-                    if (y_next_position <= y_position)
-                    {
-                        year_text_padding_y += 10;
-                    }
-                    else
-                    {
-                        year_text_padding_y -= 2;
-                    }
-                }
-            else
-                {
-                    if (y_next_position <= y_position)
-                    {
-                    	year_text_padding_y -= 2;
-                    }
-                    else
-                    {
-                        year_text_padding_y += 10;
-                    }
-                }
-            }
-            
-            vis3_svg
-              .selectAll('vis3_dots_year' + tmp_line_id + j)
-              .data('wow')
-
-              .enter()
-              .append('text')
-              .attr('class', 'vis3_dots_ne')
-              .attr(
-                'x', x_position  + year_text_padding_x) //pie_h + 100
-              .attr('y', y_position+ year_text_padding_y) //(d,i) => 150 + i*(40)
-              .text(vis3_dataset_pg[+tmp_line_id * 13 + j].Year)
-              .attr('font-size', 10)  	.style("font-weight",800);
-
-//paint-order: stroke;
-   // stroke: #000000;
-          }
-
-          
-
-    
-    
-    //dotsss
-    
+      			if (Math.abs(x_jj_position - x_position) < 40 &&
+            Math.abs(y_jj_position - y_position) < 8.5)
+            { flagDraw = false; break;}
       
+      }
+      if (!flagDraw) continue;
+      
+      if (j!=11){
+      var x_next_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j + 1].rshare);
+      var y_next_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j + 1].CO2);
+
+         
+      if (x_next_position >= x_position) 
+      {
+         if (y_next_position <= y_position) 
+              year_text_padding_y += 10;
+         else year_text_padding_y -= 2;
+          
+      } 
+      else 
+      {
+            if (y_next_position <= y_position) 
+            	year_text_padding_y -= 2;
+            else year_text_padding_y += 10; 
+      }
+			}
+      
+      printedYearpos.push([x_position,y_position]);
+                  
+        vis3_svg
+          .selectAll('vis3_dots_year' + tmp_line_id + j)
+          .data('wow')
+
+          .enter()
+          .append('text')
+          .attr('class', 'vis3_dots_ne')
+          .attr(
+            'x', x_position + year_text_padding_x) //pie_h + 100
+          .attr('y', y_position + year_text_padding_y) //(d,i) => 150 + i*(40)
+          .text(vis3_dataset_pg[+tmp_line_id * 13 + j].Year)
+          .attr('font-size', 10).style("font-weight", 800);
+
+        //paint-order: stroke;
+        // stroke: #000000;
+      }
+
+/*-----------year on each line------------*/
+
+
+
+
+      //dotsss
+
+
       tmp_array = [];
       continue;
     }
@@ -1251,7 +1194,7 @@ d3.selectAll(".vis3_dots_country_highlight").remove();
   }
 
 
-	
+
 
   //Create axes
   vis3_svg
@@ -1265,138 +1208,7 @@ d3.selectAll(".vis3_dots_country_highlight").remove();
     .attr('class', 'axis')
     .attr('transform', 'translate(' + vis3_padding + ',0)')
     .call(vis3_yAxis);
-var mouse_x, mouse_y;
-vis3_svg
-    .on('mousemove', function() {mouse_x = d3.event.pageX;
- var rect = document.getElementById('chart3').getBoundingClientRect();
-
-mouse_y = d3.event.pageY - vis3_padding - (rect.top  + document.documentElement.scrollTop);
-                                 
-
-//console.log(rect.top  + document.documentElement.scrollTop, rect.right, rect.bottom, rect.left);
-while (!d3.select('.vis3_line').empty()) {
-                  d3.select('.vis3_line').remove();
-                }
-mouse_x = mouse_x - 0.05*w -vis3_padding + 8;
-if (mouse_x>=0 && mouse_x <=vis3_w - 2*vis3_padding && mouse_y>=0 && mouse_y<=vis3_h - 2*vis3_padding )
-{
-         console.log("x " + (mouse_x));
-                                 console.log('y ' + mouse_y);
-
-	//var pos_line = mouse_x / vis3_xScale.bandwidth;
-vis3_svg
-    .selectAll(
-      'vis3_line'
-    ) /*select all rect even though they dont yet exist*/
-    .data("wow") /*count + prepare data values*/
-    .enter() /*create a new plce holder element for each bit of data*/
-    .append('line') /* append a rect element to match each placeholder*/
-    .attr('class', "vis3_line") //set class
-    .attr('x1', function (d, i) {
-      return mouse_x + vis3_padding;
-    }) /* to scale value of x*/
-    .attr('y1', vis3_padding) /* value of y - positions*/
-    .attr('x2', function (d, i) {
-      return mouse_x + vis3_padding;
-    }) /* to scale value of x*/
-    .attr('y2', vis3_h-vis3_padding)
-     /* value of y - positions*/
-
-    .style('stroke', 'black') //set color for line
-    .style('stroke-width', 1).style("stroke-dasharray", 2); //set width for line
-
-vis3_svg
-    .selectAll(
-      'vis3_line_y'
-    ) /*select all rect even though they dont yet exist*/
-    .data("wow") /*count + prepare data values*/
-    .enter() /*create a new plce holder element for each bit of data*/
-    .append('line') /* append a rect element to match each placeholder*/
-    .attr('class', "vis3_line") //set class
-    .attr('x1', function (d, i) {
-      return vis3_padding;
-    }) /* to scale value of x*/
-    .attr('y1', mouse_y + vis3_padding) /* value of y - positions*/
-    .attr('x2', function (d, i) {
-      return vis3_w - vis3_padding;
-    }) /* to scale value of x*/
-    .attr('y2', mouse_y + vis3_padding)
-     /* value of y - positions*/
-
-    .style('stroke', 'black') //set color for line
-    .style('stroke-width', 1).style("stroke-dasharray", 2); //set width for line
-
-/*vis3_svg
-
-              .append('circle')
-              .attr('class', 'vis3_line')
-              .attr('cx', mouse_x - 185)
-               //pie_h + 100
-              .attr('cy', -mouse_y + 290)
-              //(d,i) => 150 + i*(40)
-              .attr('r', 3)
-              .style('fill', 'red');*/
-
-vis3_svg
-  .append("rect")
-    .attr('class', "vis3_line") //set class
-  .attr("x",function() { if (mouse_x >=vis3_w - 2*vis3_padding - 100) return mouse_x + vis3_padding  - 110;return mouse_x + vis3_padding + 5;} )
-  .attr("y", mouse_y + vis3_padding - 25)
-  .attr("height", 20)
-  .attr("width", 95)
-  .style("fill", " #D3D3D3")
-	. style("opacity","0.5")
-  .style("stroke", "black");
-
-
-vis3_svg
-    .append('text') /* append a rect element to match each placeholder*/
-    .attr('class', "vis3_line") //set class
-    .attr('x', function() { if (mouse_x >=vis3_w - 2*vis3_padding - 100) return mouse_x + vis3_padding  - 110;return mouse_x + vis3_padding + 6;}) /* to scale value of x*/
-    .attr('y', mouse_y + vis3_padding - 10)
-     /* value of y - positions*/
-	.text(function(){var tmp_x = Math.round(
-
-	((mouse_x)/
-		(vis3_w - 2*vis3_padding) 
-		* ( d3.max(vis3_dataset_pg, function (d) {
-       		 return +d.rshare;})
--  d3.min(vis3_dataset_pg, function (d) {
-
-        return +d.rshare;
-      })
-
-
-	)
-		 + d3.min(vis3_dataset_pg, function (d) {
-        return +d.rshare;})
-	)*100)/100;
-
-var tmp_y = Math.round(
-
-	((vis3_h - 2*vis3_padding - mouse_y)/
-		(vis3_h - 2*vis3_padding) 
-		* ( d3.max(vis3_dataset_pg, function (d) {
-       		 return +d.CO2;})
--  d3.min(vis3_dataset_pg, function (d) {
-        return +d.CO2;
-      })
-
-
-	)
-		 + d3.min(vis3_dataset_pg, function (d) {
-        return +d.CO2;})
-	)*100)/100;
-
-return '(' + tmp_x + ',' + tmp_y + ')';
-
-});
-	
-}
-   
-
- });
-
+  showXYPairs(vis3_svg, vis3_padding, vis3_h, vis3_w, vis3_dataset_pg);
 }
 
 function vis3_goFilter() {
@@ -1405,23 +1217,24 @@ function vis3_goFilter() {
     'australia',
     'germany',
     'singapore',
-     'world',
+    'world',
   ];
   for (let i = 0; i < countryList.length; i++) {
     vis3_filter[i] = document.getElementById(countryList[i]).checked;
     flag = flag & !vis3_filter[i];
-  } 
+  }
   if (flag) vis3_resetFilter();
   else vis3_applyFilter();
 }
 var vis3_filter = [];
-for (let i = 0; i < 4 ; i++) {
+for (let i = 0; i < 4; i++) {
   vis3_filter.push(1);
 }
+
 function vis3_resetFilter() {
   var countryList = [
     'australia',
-        'germany',
+    'germany',
     'singapore',
     'world',
   ];
@@ -1432,4 +1245,293 @@ function vis3_resetFilter() {
   vis3_applyFilter();
 }
 
+
+function vis3_lineMouseOver(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color_array, id, vis3_xScale, vis3_yScale)
+{
+
+/*---------draw rectangle for legends----------*/
+          vis3_svg
+
+            .append('rect').attr('class', 'vis3_dots_country_highlight')
+
+            .attr('x', vis3_w + 10)
+            .attr('y', 30 + 54 + 18 * parseInt(vis3_dataset_pg.length / 13) + 50)
+            .attr('width', 155)
+            .attr('height', 100)
+            .attr('stroke', 'black')
+            .style('fill', 'none');
+
+/*---------draw regression text for legends----------*/
+
+          vis3_svg
+
+            .append('text').attr('class', 'vis3_dots_country_highlight')
+
+            .attr('x', vis3_w + 20)
+            .attr('y', 30 + 54 + 18 * parseInt(vis3_dataset_pg.length / 13) + 50 + 20)
+            .text(
+              function() {
+                var textPadding = '';
+                if (vis3_dataset_pg[id*13].Code == "SGP") {
+
+                  textPadding = '(*)';
+                  vis3_svg
+
+                    .append('text').attr('class', 'vis3_dots_country_highlight')
+
+                    .attr('x', vis3_w + 13)
+                    .attr('y', 30 + 54 + 18 * parseInt(vis3_dataset_pg.length / 13) + 50 + 20 + 20 + 20 + 25 + 35)
+                    .text("*: " + '2009 and 2010 figures are excluded.').attr('font-size', '12px');
+
+
+                }
+                return "Regression Line" + textPadding;
+
+              }
+            )
+            .style('fill', vis3_color_array[id]).style('font-weight', 550);
+
+
+/*---------draw contries for legends----------*/
+
+          vis3_svg
+
+            .append('text').attr('class', 'vis3_dots_country_highlight')
+
+            .attr('x', vis3_w + 13)
+            .attr('y', 30 + 54 + 18 * parseInt(vis3_dataset_pg.length / 13) + 50 + 20 + 20 + 15)
+            .text("y = " + vis3_dataset_Rpg[id][0] + "x" + " + " +
+              vis3_dataset_Rpg[id][1]).style('font-weight', 550).attr('font-size', '14px');
+
+/*---------draw R square for legends----------*/
+
+          vis3_svg
+
+            .append('text').attr('class', 'vis3_dots_country_highlight')
+
+            .attr('x', vis3_w + 13)
+            .attr('y', 30 + 54 + 18 * parseInt(vis3_dataset_pg.length / 13) + 50 + 20 + 20 + 20 + 25)
+            .text("R square: " + vis3_dataset_Rpg[id][2]).style('font-weight', 550).attr('font-size', '14px');
+          // .text("There is " +
+          //    vis3_dataset_Rpg[parseInt(i / 13)].comment + "between CO2 emission per capita and the share of electricity from renewables");
+
+
+
+/*---------vis3: raise line----------*/
+
+          //regression
+          var lineid= '#vis3_line' + id;
+          d3.select(lineid).style('stroke', vis3_color_array[id]) //CSS
+            .style('stroke-width', 5) //width of line
+            .style('fill', 'none')
+            .raise();
+          d3.selectAll('.vis3_dots_' + id).attr('r', 2).raise();
+
+/*---------vis3: draw country for each line----------*/
+
+          vis3_svg
+
+            .selectAll('vis3_dots_remove' + id)
+            .data('wow')
+
+            .enter()
+            .append('text')
+            .attr('class', 'vis3_dots_country_highlight')
+            .attr(
+              'x',
+              function() {
+                if (vis3_dataset_pg[id*13].Code == "SGP" && vis3_dataset_pg.length > 15) return vis3_xScale(+vis3_dataset_pg[(id+1)*13 - 2].rshare) + 20;
+                return vis3_xScale(+vis3_dataset_pg[(id+1)*13 - 2].rshare) -
+                  15;
+              }
+            ) //pie_h + 100
+            .attr(
+              'y',
+              d =>
+              vis3_yScale(+vis3_dataset_pg[(id+1)*13 - 2].CO2) + 15
+            ) //(d,i) => 150 + i*(40)
+            .text(vis3_dataset_pg[id*13].Country)
+            .style('fill', vis3_color_array[id])
+            .attr('font-size', '15px');
+
+
+}
+
+function vis3_lineMouseOut(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color_array, id)
+{
+          var lineid= '#vis3_line' + id;
+
+          d3.select(lineid).style('stroke', vis3_color_array[id]) //CSS
+            .style('stroke-width', 2) //width of line
+            .style('fill', 'none')
+            .raise();
+          d3.selectAll(".vis3_dots_country_highlight").remove();
+
+          d3.selectAll('.vis3_dots_' + id).attr('r', 1).raise();
+        
+}
+
+/*------------show x, y pairs according to mouse position-------------*/
+function showXYPairs(vis3_svg, vis3_padding, vis3_h, vis3_w, vis3_dataset_pg)
+{
+
+var mouse_x, mouse_y;
+  vis3_svg
+    .on('mousemove', function() {
+      mouse_x = d3.event.pageX;
+      var rect = document.getElementById('chart3').getBoundingClientRect();
+
+      mouse_y = d3.event.pageY - vis3_padding - (rect.top + document.documentElement.scrollTop);
+
+
+      //console.log(rect.top  + document.documentElement.scrollTop, rect.right, rect.bottom, rect.left);
+      while (!d3.select('.vis3_line').empty()) {
+        d3.select('.vis3_line').remove();
+      }
+      mouse_x = mouse_x - 0.05 * w - vis3_padding + 8;
+      if (mouse_x >= 0 && mouse_x <= vis3_w - 2 * vis3_padding && mouse_y >= 0 && mouse_y <= vis3_h - 2 * vis3_padding) {
+        console.log("x " + (mouse_x));
+        console.log('y ' + mouse_y);
+
+        //var pos_line = mouse_x / vis3_xScale.bandwidth;
+        vis3_svg
+          .selectAll(
+            'vis3_line'
+          ) /*select all rect even though they dont yet exist*/
+          .data("wow") /*count + prepare data values*/
+          .enter() /*create a new plce holder element for each bit of data*/
+          .append('line') /* append a rect element to match each placeholder*/
+          .attr('class', "vis3_line") //set class
+          .attr('x1', function() {
+            return mouse_x + vis3_padding;
+          }) /* to scale value of x*/
+          .attr('y1', vis3_padding) /* value of y - positions*/
+          .attr('x2', function() {
+            return mouse_x + vis3_padding;
+          }) /* to scale value of x*/
+          .attr('y2', vis3_h - vis3_padding)
+          /* value of y - positions*/
+
+          .style('stroke', 'black') //set color for line
+          .style('stroke-width', 1).style("stroke-dasharray", 2); //set width for line
+
+        vis3_svg
+          .selectAll(
+            'vis3_line_y'
+          ) /*select all rect even though they dont yet exist*/
+          .data("wow") /*count + prepare data values*/
+          .enter() /*create a new plce holder element for each bit of data*/
+          .append('line') /* append a rect element to match each placeholder*/
+          .attr('class', "vis3_line") //set class
+          .attr('x1', function() {
+            return vis3_padding;
+          }) /* to scale value of x*/
+          .attr('y1', mouse_y + vis3_padding) /* value of y - positions*/
+          .attr('x2', function() {
+            return vis3_w - vis3_padding;
+          }) /* to scale value of x*/
+          .attr('y2', mouse_y + vis3_padding)
+          /* value of y - positions*/
+
+          .style('stroke', 'black') //set color for line
+          .style('stroke-width', 1).style("stroke-dasharray", 2); //set width for line
+
+        /*vis3_svg
+
+                      .append('circle')
+                      .attr('class', 'vis3_line')
+                      .attr('cx', mouse_x - 185)
+                       //pie_h + 100
+                      .attr('cy', -mouse_y + 290)
+                      //(d,i) => 150 + i*(40)
+                      .attr('r', 3)
+                      .style('fill', 'red');*/
+
+        vis3_svg
+          .append("rect")
+          .attr('class', "vis3_line") //set class
+          .attr("x", function() {
+            if (mouse_x >= vis3_w - 2 * vis3_padding - 100) return mouse_x + vis3_padding - 110;
+            return mouse_x + vis3_padding + 5;
+          })
+          .attr("y", mouse_y + vis3_padding - 25)
+          .attr("height", 20)
+          .attr("width", 95)
+          .style("fill", function(){
+            if (vis3_XYboxOpacity == '1.0')
+              return 'orange';
+            return '#D3D3D3';
+          })
+          .style("opacity", vis3_XYboxOpacity)
+          .style("stroke", "black");
+
+
+        vis3_svg
+          .append('text') /* append a rect element to match each placeholder*/
+          .attr('class', "vis3_line") //set class
+          .attr('x', function() {
+            if (mouse_x >= vis3_w - 2 * vis3_padding - 100) return mouse_x + vis3_padding - 110;
+            return mouse_x + vis3_padding + 6;
+          }) /* to scale value of x*/
+          .attr('y', mouse_y + vis3_padding - 10)
+          /* value of y - positions*/
+          .text(function() {
+
+            if (vis3_XYboxOpacity == '1.0')
+              return '(' + (Math.round(vis3_currentPoint[0] * 100)/100) + ',' + (Math.round(vis3_currentPoint[1] * 100)/100) + ')';
+;
+          
+            
+            var tmp_x = Math.round(
+
+              ((mouse_x) /
+                (vis3_w - 2 * vis3_padding) *
+                (d3.max(vis3_dataset_pg, function(d) {
+                    return +d.rshare;
+                  }) -
+                  d3.min(vis3_dataset_pg, function(d) {
+
+                    return +d.rshare;
+                  })
+
+
+                ) +
+                d3.min(vis3_dataset_pg, function(d) {
+                  return +d.rshare;
+                })
+              ) * 100) / 100;
+
+            var tmp_y = Math.round(
+
+              ((vis3_h - 2 * vis3_padding - mouse_y) /
+                (vis3_h - 2 * vis3_padding) *
+                (d3.max(vis3_dataset_pg, function(d) {
+                    return +d.CO2;
+                  }) -
+                  d3.min(vis3_dataset_pg, function(d) {
+                    return +d.CO2;
+                  })
+
+
+                ) +
+                d3.min(vis3_dataset_pg, function(d) {
+                  return +d.CO2;
+                })
+              ) * 100) / 100;
+
+            return '(' + tmp_x + ',' + tmp_y + ')';
+
+          });
+
+      }
+
+
+    });
+
+
+
+
+}
+
+/*------------show x, y pairs according to mouse position-------------*/
 /*------Vis3-----------*/
