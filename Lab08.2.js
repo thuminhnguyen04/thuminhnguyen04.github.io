@@ -514,7 +514,79 @@ function hideButton() {
   }
 }
 /*-------------On Click for hide --------------*/
+function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+/*-------------Vis 1: Animation-----------------*/
+async function vis1_animation()
+{
+  
+/*------------ Update color --------*/
+    d3.csv('data/Map_V4.csv').then(async function(data) {
+      //Set input domain for color scale
+      
+      for (let i=2009;i<2020;i++)
+        {
+          document.getElementById('map1_select_year').value = i;
+
+                emptyArray = [];
+
+          for (let j = 1; j <= 9; j++) {
+        emptyArray.push(
+          parseFloat(d3.entries(data[i - 1999])[j].value)
+        );
+            
+      var currentPath = '#path' + j;
+        d3.select(currentPath)
+          .transition()
+          .duration(1000)
+          .style('fill', 
+                 
+                function()
+                 {
+                  
+                   return color(emptyArray[j - 1]);
+                     
+                 }
+                   );
+          }
+          await sleep(1000);
+
+
+            //sleep
+
+
+            //sleep
+
+            
+        //  .attr('id',"currentstroke")
+     /*     
+                    d3.select(currentPath)
+                      .transition()
+                      .duration(1000)
+                      .attr('stroke', 'green')
+            .attr('stroke-width', '1px')
+            .raise();*/
+
+            
+          
+      }
+      
+      
+    });
+
+    /*------------ Update color --------*/
+    
+}
+/*-------------Vis 1: Animation-----------------*/
+
 window.onload = init;
+
+
+
+
+
+
 
 //Visualisation 2
 var vis2_dataset_f;
@@ -535,6 +607,8 @@ function vis2_execution() {
     applyFilter();
   });
 }
+
+
 
 // Visualisation 2
 //button handle
@@ -900,7 +974,8 @@ var vis3_dataset_Rf = [
   [-0.5622, 13.19, 0.8916, 'very strong inverse relationship'],
   [-0.05071, 6.019, 0.8206, 'very strong relationship']
 ];
-
+ var vis3_year_s =0;
+ var vis3_year_e =0;
 function vis3_execution() {
   //13 records/region
   //read data
@@ -914,18 +989,28 @@ function vis3_execution() {
 
       vis3_dataset_f.push(d3.entries(data)[j].value);
     }
+    vis3_year_s = vis3_loadYearFilter()[0];
+    vis3_year_e = vis3_loadYearFilter()[1];
     vis3_applyFilter();
   });
 }
  var vis3_dataset_Rpg = [];
+var yearCount = 0;
+
 function vis3_applyFilter() {
   var vis3_w = w * 0.7;
   var vis3_h = h;
   var vis3_dataset_pg = [];
- 
+
+  
+yearCount = vis3_year_e - vis3_year_s + 1;
  vis3_dataset_Rpg = [];
   for (let i = 0; i < vis3_dataset_f.length; i++) {
-    if (vis3_filter[parseInt(i / 13)]) vis3_dataset_pg.push(vis3_dataset_f[i]);
+    if (vis3_filter[parseInt(i / 13)])
+    {
+      if (parseInt(vis3_dataset_f[i].Year)>=vis3_year_s && parseInt(vis3_dataset_f[i].Year)<=vis3_year_e )
+        vis3_dataset_pg.push(vis3_dataset_f[i]);
+    }
   }
 
   for (let i = 0; i < vis3_dataset_Rf.length; i++) {
@@ -947,10 +1032,10 @@ function vis3_applyFilter() {
 
   var vis3_yScale = d3
     .scaleLinear()
-    .domain([
-      d3.min(vis3_dataset_pg, function(d) {
+    .domain([0,
+      /*d3.min(vis3_dataset_pg, function(d) {
         return +d.CO2;
-      }),
+      }),*/
       d3.max(vis3_dataset_pg, function(d) {
         return +d.CO2;
       }),
@@ -989,7 +1074,7 @@ function vis3_applyFilter() {
     .attr('text-anchor', 'middle')
     .attr('transform', 'rotate(270)')
     .style('font-size', '15px')
-    .text('Tonnes of CO2 emission per capita');
+    .text('Tonnes of carbon dioxide emission per capita');
 
 
   //legends----------------
@@ -1001,7 +1086,7 @@ function vis3_applyFilter() {
     .append('rect')
     .attr('x', vis3_w + 10)
     .attr('y', 30 + 42)
-    .attr('height', (parseInt(vis3_dataset_pg.length / 13) + 1) * 18)
+    .attr('height', (vis3_dataset_Rpg.length + 1) * 18)
     .attr('width', 155)
     .style('fill', 'none')
     .style('stroke', 'black');
@@ -1016,7 +1101,7 @@ function vis3_applyFilter() {
     .attr('alignment-baseline', 'middle')
     .style('font-weight', 1000);
 
-  for (let i = 0; i < parseInt(vis3_dataset_pg.length / 13); i++) {
+  for (let i = 0; i < vis3_dataset_Rpg.length; i++) {
     vis3_color_array.push(pie_color(i));
     vis3_svg
 
@@ -1033,7 +1118,7 @@ function vis3_applyFilter() {
       .append('text')
       .attr('x', vis3_w + 20 + 25 + 5)
       .attr('y', 30 + 54 + 18 * i + 14)
-      .text(vis3_dataset_pg[i * 13].Country)
+      .text(vis3_dataset_pg[i * yearCount].Country)
       .style('fill', pie_color(i)).style('font-weight', 550);;
 
   }
@@ -1053,8 +1138,10 @@ function vis3_applyFilter() {
   var tmp_array = [];
 
   for (let i = 0; i < vis3_dataset_pg.length; i++) {
-    if (i % 13 == 12) {
-          var tmp_line_id = parseInt(i / 13);
+        tmp_array.push(vis3_dataset_pg[i]);
+
+    if (i % yearCount == yearCount - 1) {
+          var tmp_line_id = parseInt(i / yearCount);
 
       vis3_svg
         .append('path') //append path
@@ -1075,20 +1162,20 @@ function vis3_applyFilter() {
               vis3_lineMouseOut(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color_array, tmp_line_id)}
            );
       //dotsss
-tmp_line_id = parseInt(i / 13);
+tmp_line_id = parseInt(i / yearCount);
 
 /*-----------dots point of each line------------*/
 
-      for (let j = 0; j < 12; j++) {
-        var x_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].rshare);
-        var y_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].CO2);
+      for (let j = 0; j < yearCount; j++) {
+        var x_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * yearCount + j].rshare);
+        var y_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * yearCount + j].CO2);
         vis3_svg
         .selectAll("vis3_dataPointForEachLine")
           .data('wow')
          .enter()
           .append('circle')
           .attr('class', 'vis3_dots_' + tmp_line_id)
-          .attr('id','vis3_dots_'+ (tmp_line_id * 13 + j))
+          .attr('id','vis3_dots_'+ (tmp_line_id * yearCount + j))
           .attr('cx', x_position)
           //pie_h + 100
           .attr('cy', y_position)
@@ -1110,21 +1197,18 @@ tmp_line_id = parseInt(i / 13);
            );
       }
  /*-----------dots point of each line------------*/
-tmp_line_id = parseInt(i / 13);
+tmp_line_id = parseInt(i / yearCount);
 
 
 /*-----------year on each line------------*/
      var printedYearpos = [];
-      for (let j = 0; j < 12; j++) {
-        var x_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].rshare);
-        var y_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j].CO2);
+      for (let j = 0; j < yearCount; j++) {
+        var x_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * yearCount + j].rshare);
+        var y_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * yearCount + j].CO2);
         var year_text_padding_x = 5;
         var year_text_padding_y = 0;
         //if (j == 6) continue;
-        if (j == 0) {
-          year_text_padding_x = 0;
-          year_text_padding_y = 15
-        };
+        
 			var flagDraw = true;
       for (let jj=0;jj<printedYearpos.length;jj++)
       {
@@ -1138,9 +1222,9 @@ tmp_line_id = parseInt(i / 13);
       }
       if (!flagDraw) continue;
       
-      if (j!=11){
-      var x_next_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * 13 + j + 1].rshare);
-      var y_next_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * 13 + j + 1].CO2);
+      if (j!=yearCount - 1 ){
+      var x_next_position = vis3_xScale(+vis3_dataset_pg[+tmp_line_id * yearCount + j + 1].rshare);
+      var y_next_position = vis3_yScale(+vis3_dataset_pg[+tmp_line_id * yearCount + j + 1].CO2);
 
          
       if (x_next_position >= x_position) 
@@ -1153,8 +1237,8 @@ tmp_line_id = parseInt(i / 13);
       else 
       {
             if (y_next_position <= y_position) 
-            	year_text_padding_y -= 2;
-            else year_text_padding_y += 10; 
+            	year_text_padding_y -= 40;
+            else year_text_padding_y -= 2; 
       }
 			}
       
@@ -1170,7 +1254,7 @@ tmp_line_id = parseInt(i / 13);
           .attr(
             'x', x_position + year_text_padding_x) //pie_h + 100
           .attr('y', y_position + year_text_padding_y) //(d,i) => 150 + i*(40)
-          .text(vis3_dataset_pg[+tmp_line_id * 13 + j].Year)
+          .text(vis3_dataset_pg[+tmp_line_id * yearCount + j].Year)
           .attr('font-size', 10).style("font-weight", 800);
 
         //paint-order: stroke;
@@ -1186,10 +1270,8 @@ tmp_line_id = parseInt(i / 13);
 
 
       tmp_array = [];
-      continue;
     }
 
-    tmp_array.push(vis3_dataset_pg[i]);
 
   }
 
@@ -1223,8 +1305,20 @@ function vis3_goFilter() {
     vis3_filter[i] = document.getElementById(countryList[i]).checked;
     flag = flag & !vis3_filter[i];
   }
-  if (flag) vis3_resetFilter();
-  else vis3_applyFilter();
+  vis3_year_s = vis3_loadYearFilter()[0];
+  vis3_year_e = vis3_loadYearFilter()[1];
+  if (flag || vis3_year_s>=vis3_year_e)
+  {
+    if (!flag) 
+      alert("This visualisation will be reset due to invalid year range!");
+   
+    vis3_resetFilter();
+  }
+  else
+  {
+    
+    vis3_applyFilter();
+  }
 }
 var vis3_filter = [];
 for (let i = 0; i < 4; i++) {
@@ -1242,6 +1336,11 @@ function vis3_resetFilter() {
     document.getElementById(countryList[i]).checked = 1;
     vis3_filter[i] = 1;
   }
+      document.getElementById('vis3_year_s').value = '2009';
+      document.getElementById('vis3_year_e').value = '2020';
+
+  vis3_year_s = 2009;
+  vis3_year_e = 2020;
   vis3_applyFilter();
 }
 
@@ -1255,7 +1354,7 @@ function vis3_lineMouseOver(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color
             .append('rect').attr('class', 'vis3_dots_country_highlight')
 
             .attr('x', vis3_w + 10)
-            .attr('y', 30 + 54 + 18 * parseInt(vis3_dataset_pg.length / 13) + 50)
+            .attr('y', 30 + 54 + 18 * vis3_dataset_Rpg.length + 50)
             .attr('width', 155)
             .attr('height', 100)
             .attr('stroke', 'black')
@@ -1268,11 +1367,11 @@ function vis3_lineMouseOver(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color
             .append('text').attr('class', 'vis3_dots_country_highlight')
 
             .attr('x', vis3_w + 20)
-            .attr('y', 30 + 54 + 18 * parseInt(vis3_dataset_pg.length / 13) + 50 + 20)
+            .attr('y', 30 + 54 + 18 * vis3_dataset_Rpg.length + 50 + 20)
             .text(
               function() {
                 var textPadding = '';
-                if (vis3_dataset_pg[id*13].Code == "SGP") {
+                if (vis3_dataset_pg[id*yearCount].Code == "SGP") {
 
                   textPadding = '(*)';
                   vis3_svg
@@ -1280,7 +1379,7 @@ function vis3_lineMouseOver(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color
                     .append('text').attr('class', 'vis3_dots_country_highlight')
 
                     .attr('x', vis3_w + 13)
-                    .attr('y', 30 + 54 + 18 * parseInt(vis3_dataset_pg.length / 13) + 50 + 20 + 20 + 20 + 25 + 35)
+                    .attr('y', 30 + 54 + 18 * vis3_dataset_Rpg.length + 50 + 20 + 20 + 20 + 25 + 35)
                     .text("*: " + '2009 and 2010 figures are excluded.').attr('font-size', '12px');
 
 
@@ -1299,7 +1398,7 @@ function vis3_lineMouseOver(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color
             .append('text').attr('class', 'vis3_dots_country_highlight')
 
             .attr('x', vis3_w + 13)
-            .attr('y', 30 + 54 + 18 * parseInt(vis3_dataset_pg.length / 13) + 50 + 20 + 20 + 15)
+            .attr('y', 30 + 54 + 18 * vis3_dataset_Rpg.length + 50 + 20 + 20 + 15)
             .text("y = " + vis3_dataset_Rpg[id][0] + "x" + " + " +
               vis3_dataset_Rpg[id][1]).style('font-weight', 550).attr('font-size', '14px');
 
@@ -1310,7 +1409,7 @@ function vis3_lineMouseOver(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color
             .append('text').attr('class', 'vis3_dots_country_highlight')
 
             .attr('x', vis3_w + 13)
-            .attr('y', 30 + 54 + 18 * parseInt(vis3_dataset_pg.length / 13) + 50 + 20 + 20 + 20 + 25)
+            .attr('y', 30 + 54 + 18 * vis3_dataset_Rpg.length + 50 + 20 + 20 + 20 + 25)
             .text("R square: " + vis3_dataset_Rpg[id][2]).style('font-weight', 550).attr('font-size', '14px');
           // .text("There is " +
           //    vis3_dataset_Rpg[parseInt(i / 13)].comment + "between CO2 emission per capita and the share of electricity from renewables");
@@ -1340,17 +1439,17 @@ function vis3_lineMouseOver(vis3_svg,vis3_dataset_pg, vis3_w, vis3_h, vis3_color
             .attr(
               'x',
               function() {
-                if (vis3_dataset_pg[id*13].Code == "SGP" && vis3_dataset_pg.length > 15) return vis3_xScale(+vis3_dataset_pg[(id+1)*13 - 2].rshare) + 20;
-                return vis3_xScale(+vis3_dataset_pg[(id+1)*13 - 2].rshare) -
+                if (vis3_dataset_pg[id*yearCount].Code == "OWID_WRL" || vis3_dataset_pg[id*yearCount].Code == "SGP") return vis3_xScale(+vis3_dataset_pg[(id+1)*yearCount - 1].rshare) + 7;
+                return vis3_xScale(+vis3_dataset_pg[(id+1)*yearCount - 1].rshare) -
                   15;
               }
             ) //pie_h + 100
             .attr(
               'y',
               d =>
-              vis3_yScale(+vis3_dataset_pg[(id+1)*13 - 2].CO2) + 15
+              vis3_yScale(+vis3_dataset_pg[(id+1)*yearCount - 1].CO2) + 15
             ) //(d,i) => 150 + i*(40)
-            .text(vis3_dataset_pg[id*13].Country)
+            .text(vis3_dataset_pg[id*yearCount].Country)
             .style('fill', vis3_color_array[id])
             .attr('font-size', '15px');
 
@@ -1534,4 +1633,20 @@ var mouse_x, mouse_y;
 }
 
 /*------------show x, y pairs according to mouse position-------------*/
+
+
+
+/*-----------------vis3: filter year and country -------------------------*/
+function vis3_loadYearFilter() {
+  const vis3_year_s = document.getElementById('vis3_year_s').value;
+  const vis3_year_e = document.getElementById('vis3_year_e').value;
+
+  
+  return [parseInt(vis3_year_s),parseInt(vis3_year_e)];
+  
+}
+//-----------
+
+
+/*-----------------vis3: filter year -------------------------*/
 /*------Vis3-----------*/

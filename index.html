@@ -44,10 +44,9 @@
 <p><strong><a href="#graph3" class="prevVis"> &larr; GRAPH 3</a></strong></p>
 	<h2>Graph 1</h2>
 	<br>	
-	<h3>Total annual energy consumption in Australian per financial year (Terawatt hours)</h3>
+	<h3>Total annual energy consumption in Australian</h3><h3>per financial year (Terawatt hours)</h3>
 	
 <br>
-<p><strong><a href="#graph2" class="nextVis"> GRAPH 2 &rarr;</a></strong></p>
 
 	<label for="membership"><em><strong>Filter by year:</em></strong></label>
 	
@@ -64,10 +63,11 @@
 
 	<option value="2018">2018</option>
 	<option value="2019">2019</option>
-	<option value="2020">2020</option>
-	<option value="2021">2021</option>
 	</select>
+<br>
+<p><strong><a href="#graph2" class="nextVis"> &rarr; GRAPH 2</a></strong></p>
 
+    <button type="button" id="vis1_animation" onclick="vis1_animation()"><strong>Animation</strong></button>
 
 </div>
 
@@ -133,7 +133,7 @@
 <p><strong><a href="#graph2" class="prevVis"> &larr; GRAPH 2</a></strong></p>
 
 	<h2>Graph 3</h2>
-	<h3>Relationship between Carbon Dioxide Emissions per capita <br>and the Share of Electricity from Renewables</h3>
+	<h3>Relationship between Carbon Dioxide Emissions per capita</h3><h3>and the Share of Electricity from Renewables</h3>
 		
 <br>
 			<legend><strong><em>Select which countries you would like to include:</em></strong></legend>
@@ -151,6 +151,55 @@
 				<input type="checkbox" id="world" name="category[]" value="world" checked="checked"/>
 			
 			</em></p>
+
+
+
+
+
+
+
+<br>
+<p><em><strong>From &nbsp&nbsp&nbsp - &nbsp&nbsp&nbsp&nbsp&nbsp to&nbsp&nbsp&nbsp&nbsp</em></strong></p>
+<p>
+<label for="membership"></label>
+	<select name="membership" id="vis3_year_s">
+ 	<option value="2009" selected>2009</option>
+ 	<option value="2010">2010</option>
+ 	<option value="2011">2011</option>
+ 	<option value="2012">2012</option>
+ 	<option value="2013">2013</option>
+	<option value="2014">2014</option>
+	<option value="2015">2015</option>
+	<option value="2016">2016</option>
+	<option value="2017">2017</option>
+
+	<option value="2018">2018</option>
+	<option value="2019">2019</option>
+	<option value="2020">2020</option>
+	</select>
+	<select name="membership" id="vis3_year_e">
+ 	<option value="2009">2009</option>
+ 	<option value="2010">2010</option>
+ 	<option value="2011">2011</option>
+ 	<option value="2012">2012</option>
+ 	<option value="2013">2013</option>
+	<option value="2014">2014</option>
+	<option value="2015">2015</option>
+	<option value="2016">2016</option>
+	<option value="2017">2017</option>
+
+	<option value="2018">2018</option>
+	<option value="2019">2019</option>
+	<option value="2020" selected>2020</option>
+	</select></p>
+
+
+
+
+<br>
+
+
+
 <p><strong><a href="#graph1" class="nextVis"> GRAPH 1 &rarr;</a></strong></p>
 
    <p> <button type="button" id="vis3_go" onclick="vis3_goFilter()"><strong>APPLY</strong></button>    

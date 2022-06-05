@@ -78,7 +78,7 @@
 	  color: white;
 	  border: 1px solid black;
 	}
-	#graph2 button, #graph3 button{ background: #f8f4d0;}
+	#graph2 button, #graph3 button, #graph1 button { background: #f8f4d0;}
 	::selection {
 	  background: #ffc8ff;
 	}
@@ -129,7 +129,7 @@
 .nextVis{
 	 align-items: right;
 	  justify-items: right;
-	right:50px;
+	right:30px;
 	background: #f8f4d0;
 padding: 0px 5px 0px 5px;
 	margin:0px;
@@ -140,7 +140,7 @@ padding: 0px 5px 0px 5px;
 .prevVis{
 	 align-items: left;
 	  justify-items: left;
-	left:50px;
+	left: 10px;
 	background: #f8f4d0;
 padding: 0px 5px 0px 5px;
 	position:absolute;
