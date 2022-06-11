@@ -1650,3 +1650,17 @@ function vis3_loadYearFilter() {
 
 /*-----------------vis3: filter year -------------------------*/
 /*------Vis3-----------*/
+
+
+function vis1_popUp() {
+  var popup = document.getElementById("vis1_myPopup");
+  popup.classList.toggle("show");
+}
+function vis2_popUp() {
+  var popup = document.getElementById("vis2_myPopup");
+  popup.classList.toggle("show");
+}
+function vis3_popUp() {
+  var popup = document.getElementById("vis3_myPopup");
+  popup.classList.toggle("show");
+}
