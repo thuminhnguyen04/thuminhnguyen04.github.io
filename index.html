@@ -1,238 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-	<meta charset="UTF-8"/>
-	<meta name="description"	content="Data Visualisation Task 8.2"/>
-	<meta name="keywords"		  content="HTML, CSS, D3"/>
-	<meta name="author"			  content="Minh Thu Nguyen"/>
-	<link href="styles/lab02.1.css" rel="stylesheet">
-	<title>COS30045 - Project</title>
-	
-	<!--Insert description of exercise  -->
-	
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Data Visualisation Project" />
+    <meta name="keywords" content="HTML, CSS, D3" />
+    <meta name="author" content="Minh Thu Nguyen" />
+    <link href="styles/main.css" rel="stylesheet">
+    <title>COS30045 - Renewable Energy Project</title>
 
-	<script src="https://d3js.org/d3.v5.min.js"></script>
-	<script src="Lab08.2.js"></script>
+    <!--Insert description of exercise  -->
 
 
-</head>
-
-<body>
-<div class="heading">
-
-<div class="contact-us">
-
-	<h3>About us</h3>
-	<p>103499232 - Minh Thu Nguyen</p>
-	<p>103499232 - Thao Dao Phuong</p>
-
-</div>
-	<h1>Will our world really get better <br>if renewable energy replaced the conventional?
-</h1>
-<p id="subtitle">
-Optimising energy usage is acknowledged as one of the latest key Australian challenges. Most of the energy we currently consume is generated from fossil fuels, which have adverse impact on the environment. Renewable Energy depends typically on weather and therefore it is not always available in plentiful supply in Australia. Even with more efficient technology it is expected that Australian consumption habits will need to change. Consequently, there is a growing need to develop visuals to empower Australian consumers to take control of their power consumption with the aim of delivering an effective energy usage.
-</p>
-	<p><strong>
-		<a href="#graph1">GRAPH 1</a>    
-		<a href="#graph2">GRAPH 2</a>   
-                <a href="#graph3">GRAPH 3</a>  
-	</strong></p>
-
-		
-</div>
- 	
-	
-<div class="graph1" id="graph1">
-<p><strong><a href="#graph3" class="prevVis"> &larr; GRAPH 3</a></strong></p>
-	<h2>Graph 1 <sup class="popup" onclick="vis1_popUp()"> &#9432
-  <span class="popuptext" id="vis1_myPopup">Energy consumption measures the amount of energy used in the Australian economy.<br>Energy generation measures the amount of energy produced in Australia. 
-<br><br> <ul>Please note that: 
-	<ol>&nbsp&nbsp&nbspFigures for ACT state are missing from the source database.</ol>
-	<ol>&nbsp&nbsp&nbspThe year mentioned in this graph is financial year.</ol>
-	<ol>&nbsp&nbsp&nbspAnual energy consumption may not be identical to anual energy generation for each state as generated energy can be used for other purposes.</ol>
-</ul></span>
-</sup></h2>
-	<br>	
-	<h3>Total annual energy consumption and energy generation in Australia</h3><h3>per financial year (Terawatt hours)</h3>
-	
-<br>
-
-	<label for="membership"><em><strong>Filter by year:</em></strong></label>
-	
-<select name="membership" id="map1_select_year">
- 	<option value="2009" selected>2009</option>
- 	<option value="2010">2010</option>
- 	<option value="2011">2011</option>
- 	<option value="2012">2012</option>
- 	<option value="2013">2013</option>
-	<option value="2014">2014</option>
-	<option value="2015">2015</option>
-	<option value="2016">2016</option>
-	<option value="2017">2017</option>
-
-	<option value="2018">2018</option>
-	<option value="2019">2019</option>
-	</select>
-<br>
-<p><strong><a href="#graph2" class="nextVis"> &rarr; GRAPH 2</a></strong></p>
-
-    <button type="button" id="vis1_animation" onclick="vis1_animation()"><strong>Animation</strong></button>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="main.js"></script>
 
 
-</div>
+  </head>
 
-<div class="details">
-    <h2 class="country"></h2>
-    <p class="females"></p>
-    <p class="males"></p>
-    <p id="chart1_pie"></p>
-    <p id="chart1_pie_legends"></p>	
-    <button type="button" id="hide" onclick="hideButton()"><strong>Hide Me!</strong></button>
-</div>
-	<p id="chart"></p>
+  <body>
+  <! --------------Welcome section------------------>
 
-<div class="graph1" id="graph2">
-<p><strong><a href="#graph1" class="prevVis"> &larr; GRAPH 1</a></strong></p>
-	<h2>Graph 2
-<sup class="popup" onclick="vis2_popUp()"> &#9432
-  <span class="popuptext" id="vis2_myPopup">Different energy types have different carbon footprints, with some of these values being higher than others.<br><br>This figure will address the following question: <br>Which energy sources have the highest carbon footprint?</span>
-</sup>
+    <div class="heading">
 
-</h2>
-	<h3> Carbon Dioxide Emissions of each type of Energy per its Lifecycle</h3>
+      <div class="about-us">
 
-	<br>
-			<legend><strong><em>Select which energy your would like to include:</strong></legend>
-			<p><strong>Non-renewable energy:</strong>
-			<br>
-			<label for="lignite">Lignite</label> 
-				<input type="checkbox" id="lignite" name="category[]" value="lignite" checked="checked"/>
-			
-			<label for="coal">Coal</label> 
-				<input type="checkbox" id="coal" name="category[]" value="coal" checked="checked"/>
-			
-			<label for="oil">Oil</label> 
-				<input type="checkbox" id="oil" name="category[]" value="oil" checked="checked"/>
-			
-			<label for="naturalgas">Natural Gas</label> 
-				<input type="checkbox" id="naturalgas" name="category[]" value="naturalgas" checked="checked"/>
-			
-<br>
-			<strong>Renewable energy: </strong>
-			<br>
-			<label for="solar">Solar PV</label> 
-				<input type="checkbox" id="solar" name="category[]" value="solar" checked="checked"/>
-			
-			<label for="biomass">Biomass</label> 
-				<input type="checkbox" id="biomass" name="category[]" value="biomass" checked="checked"/>
-			
-<label for="nuclear">Nuclear</label> 
-				<input type="checkbox" id="nuclear" name="category[]" value="nuclear" checked="checked"/>
-			<label for="hydro">Hydroelectric</label> 
-				<input type="checkbox" id="hydro" name="category[]" value="hydro" checked="checked"/>
-			<label for="wind">Wind</label> 
-				<input type="checkbox" id="wind" name="category[]" value="wind" checked="checked"/>
-			
-			</em></p>
-<p><strong><a href="#graph3" class="nextVis"> GRAPH 3 &rarr;</a></strong></p>
+        <h3>About us</h3>
+        <p>103499232 - Minh Thu Nguyen</p>
+        <p>103492684 - Thao Dao Phuong</p>
 
-   <p> <button type="button" id="go" onclick="goFilter()"><strong>APPLY</strong></button>    
-     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  <button type="button" id="reset" onclick="resetFilter()"><strong>RESET</strong></button>
-	</p>
+      </div>
+      <h1>Will our world really get better <br>if renewable energy replaced the conventional?
+      </h1>
+      <p id="subtitle">
+        Optimising energy usage is acknowledged as one of the latest key Australian challenges. Most of the energy we currently consume is generated from fossil fuels, which have adverse impact on the environment. Renewable Energy depends typically on weather and therefore it is not always available in plentiful supply in Australia. Even with more efficient technology it is expected that Australian consumption habits will need to change. Consequently, there is a growing need to develop visuals to empower Australian consumers to take control of their power consumption with the aim of delivering an effective energy usage.
+      </p>
+      
+      <p><strong>
+          <a href="#graph1">GRAPH 1</a>
+          <a href="#graph2">GRAPH 2</a>
+          <a href="#graph3">GRAPH 3</a>
+        </strong></p>
 
 
-</div>
-	<p id="chart2"></p>
+    </div>
 
-<div class="graph1" id="graph3">
-<p><strong><a href="#graph2" class="prevVis"> &larr; GRAPH 2</a></strong></p>
+<! --------------Welcome section------------------>
 
-	<h2>Graph 3
+<! --------------Visualisation 1 section------------------>
 
-<sup class="popup" onclick="vis3_popUp()"> &#9432
-  <span class="popuptext" id="vis3_myPopup">It has been suggested that there is a significant relationship between renewable energy and CO2 emissions in top natural resource depending countries over the period 2009-2019. 
-<br><br>This interactive seconds that by illustrating the carbon dioxide (CO2) emissions per capita, measured in tonnes per year versus the share of total electricity output from renewables.</span>
-</sup>
-</h2>
-	<h3>Relationship between Carbon Dioxide Emissions per capita</h3><h3>and the Share of Electricity from Renewables</h3>
-		
-<br>
-			<legend><strong><em>Select which countries you would like to include:</em></strong></legend>
-			<p><em>
-			
-			<label for="australia">Australia</label> 
-				<input type="checkbox" id="australia" name="category[]" value="australia" checked="checked"/>
-			
-						<label for="germany">Germany</label> 
-				<input type="checkbox" id="germany" name="category[]" value="germany" checked="checked"/>
-			
-			<label for="singapore">Singapore</label> 
-				<input type="checkbox" id="singapore" name="category[]" value="singapore" checked="checked"/>
-			<label for="world">World</label> 
-				<input type="checkbox" id="world" name="category[]" value="world" checked="checked"/>
-			
-			</em></p>
+        <! --------------Visualisation 1 heading------------------>
+
+    <div class="graph" id="graph1">
+      <p><strong><a href="#graph3" class="prevVis"> &larr; GRAPH 3</a></strong></p>
+      <h2>Graph 1 <sup class="popup" onclick="vis1_popUp()"> &#9432
+          <span class="popuptext" id="vis1_myPopup">Energy consumption measures the amount of energy used in the Australian economy.<br>Energy generation measures the amount of energy produced in Australia.
+            <br><br>
+            <ul>Please note that:
+              <ol>&nbsp&nbsp&nbspFigures for ACT state are missing from the source database.</ol>
+              <ol>&nbsp&nbsp&nbspThe year mentioned in this graph is financial year.</ol>
+              <ol>&nbsp&nbsp&nbspAnual energy consumption may not be identical to anual energy generation for each state as generated energy can be used for other purposes.</ol>
+            </ul>
+          </span>
+        </sup></h2>
+      <br>
+      <h3>Total annual energy consumption and energy generation in Australia</h3>
+      <h3>per financial year (Terawatt hours)</h3>
+
+      <br>
+
+      <label for="map1_select_year"><em><strong>Filter by year:</strong></em></label>
+
+      <select name="map1_select_year" id="map1_select_year">
+        <option value="2009" selected>2009</option>
+        <option value="2010">2010</option>
+        <option value="2011">2011</option>
+        <option value="2012">2012</option>
+        <option value="2013">2013</option>
+        <option value="2014">2014</option>
+        <option value="2015">2015</option>
+        <option value="2016">2016</option>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+        <option value="2019">2019</option>
+      </select>
+      <br>
+      <p><strong><a href="#graph2" class="nextVis"> &rarr; GRAPH 2</a></strong></p>
+
+      <button type="button" id="vis1_animation" onclick="vis1_animation()"><strong>Animation</strong></button>
+
+        <! --------------Visualisation 1 heading------------------>
+    
+        <! --------------Visualisation 1 vis------------------>
+
+    </div>
+
+    <div class="details">
+      <h2 class="pie_title"></h2>
+      <p class="pie_nodata"></p>
+      <p id="chart1_pie"></p>
+      <p id="chart1_pie_legends"></p>
+      <button type="button" id="hide" onclick="hideButton()"><strong>Hide Me!</strong></button>
+    </div>
+    <p id="chart"></p>
+        <! --------------Visualisation 1 vis------------------>
+
+<! --------------Visualisation 1 section------------------>
+
+<! --------------Visualisation 2 section------------------>
+
+    <div class="graph" id="graph2">
+      <p><strong><a href="#graph1" class="prevVis"> &larr; GRAPH 1</a></strong></p>
+      <h2>Graph 2
+        <sup class="popup" onclick="vis2_popUp()"> &#9432
+          <span class="popuptext" id="vis2_myPopup">Different energy types have different carbon footprints, with some of these values being higher than others.<br>This figure will address the following question: <br>Which energy sources have the highest carbon footprint?
+            <br><br>Please note that:<br>&nbsp&nbsp&nbspH figures carry the highest amount of carbon dioxide emissions recorded throughout the experiment.
+            <br>&nbsp&nbsp&nbspL figures carry the lowest amount of carbon dioxide emissions recorded throughout the experiment.
+
+          </span>
+        </sup>
+
+      </h2>
+      <h3> Carbon Dioxide Emissions of each type of Energy per its Lifecycle</h3>
+
+      <br>
+      <em><legend><strong>Select which energy your would like to include:</strong></legend>
+      <p><strong>Non-renewable energy:</strong>
+        <br>
+        <label for="lignite">Lignite</label>
+        <input type="checkbox" id="lignite" name="category[]" value="lignite" checked="checked" />
+
+        <label for="coal">Coal</label>
+        <input type="checkbox" id="coal" name="category[]" value="coal" checked="checked" />
+
+        <label for="oil">Oil</label>
+        <input type="checkbox" id="oil" name="category[]" value="oil" checked="checked" />
+
+        <label for="naturalgas">Natural Gas</label>
+        <input type="checkbox" id="naturalgas" name="category[]" value="naturalgas" checked="checked" />
+
+        <br>
+        <strong>Renewable energy: </strong>
+        <br>
+        <label for="solar">Solar PV</label>
+        <input type="checkbox" id="solar" name="category[]" value="solar" checked="checked" />
+
+        <label for="biomass">Biomass</label>
+        <input type="checkbox" id="biomass" name="category[]" value="biomass" checked="checked" />
+
+        <label for="nuclear">Nuclear</label>
+        <input type="checkbox" id="nuclear" name="category[]" value="nuclear" checked="checked" />
+        <label for="hydro">Hydroelectric</label>
+        <input type="checkbox" id="hydro" name="category[]" value="hydro" checked="checked" />
+        <label for="wind">Wind</label>
+        <input type="checkbox" id="wind" name="category[]" value="wind" checked="checked" />
+
+        </p></em>
+      <p><strong><a href="#graph3" class="nextVis"> GRAPH 3 &rarr;</a></strong></p>
+
+      <p> <button type="button" id="go" onclick="goFilter()"><strong>APPLY</strong></button>
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <button type="button" id="reset" onclick="resetFilter()"><strong>RESET</strong></button>
+      </p>
+
+
+    </div>
+    <p id="chart2"></p>
+
+<! --------------Visualisation 2 section------------------>
+
+<! --------------Visualisation 3 section------------------>
+
+    <div class="graph" id="graph3">
+      <p><strong><a href="#graph2" class="prevVis"> &larr; GRAPH 2</a></strong></p>
+
+      <h2>Graph 3
+
+        <sup class="popup" onclick="vis3_popUp()"> &#9432
+          <span class="popuptext" id="vis3_myPopup">It has been suggested that there is a significant relationship between renewable energy and CO2 emissions in top natural resource depending countries over the period 2009-2019.
+            <br><br>This interactive seconds that by illustrating the carbon dioxide (CO2) emissions per capita, measured in tonnes per year versus the share of total electricity output from renewables.</span>
+        </sup>
+      </h2>
+      <h3>Relationship between Carbon Dioxide Emissions per capita</h3>
+      <h3>and the Share of Electricity from Renewables</h3>
+
+      <br>
+      <legend><strong><em>Select which countries you would like to include:</em></strong></legend>
+      <p><em>
+
+          <label for="australia">Australia</label>
+          <input type="checkbox" id="australia" name="category[]" value="australia" checked="checked" />
+
+          <label for="germany">Germany</label>
+          <input type="checkbox" id="germany" name="category[]" value="germany" checked="checked" />
+
+          <label for="singapore">Singapore</label>
+          <input type="checkbox" id="singapore" name="category[]" value="singapore" checked="checked" />
+          <label for="world">World</label>
+          <input type="checkbox" id="world" name="category[]" value="world" checked="checked" />
+
+        </em></p>
+
+
+      <br>
+      <p><em><strong>From &nbsp&nbsp&nbsp - &nbsp&nbsp&nbsp&nbsp&nbsp to&nbsp&nbsp&nbsp&nbsp</strong></em></p>
+      <p>
+        <label for="vis3_year"></label>
+        <select name="vis3_year_s" id="vis3_year_s">
+          <option value="2009" selected>2009</option>
+          <option value="2010">2010</option>
+          <option value="2011">2011</option>
+          <option value="2012">2012</option>
+          <option value="2013">2013</option>
+          <option value="2014">2014</option>
+          <option value="2015">2015</option>
+          <option value="2016">2016</option>
+          <option value="2017">2017</option>
+
+          <option value="2018">2018</option>
+          <option value="2019">2019</option>
+          <option value="2020">2020</option>
+        </select>
+        <select name="vis3_year_e" id="vis3_year_e">
+          <option value="2009">2009</option>
+          <option value="2010">2010</option>
+          <option value="2011">2011</option>
+          <option value="2012">2012</option>
+          <option value="2013">2013</option>
+          <option value="2014">2014</option>
+          <option value="2015">2015</option>
+          <option value="2016">2016</option>
+          <option value="2017">2017</option>
+
+          <option value="2018">2018</option>
+          <option value="2019">2019</option>
+          <option value="2020" selected>2020</option>
+        </select></p>
+      <br>
 
 
 
+      <p><strong><a href="#graph1" class="nextVis"> GRAPH 1 &rarr;</a></strong></p>
 
+      <p> <button type="button" id="vis3_go" onclick="vis3_goFilter()"><strong>APPLY</strong></button>
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <button type="button" id="vis3_reset" onclick="vis3_resetFilter()"><strong>RESET</strong></button>
+      </p>
 
+    </div>
+    <p id="chart3"></p>
+    
+    <! --------------Visualisation 1 section------------------>
 
+    <footer>
+      <p>COS30045 Data Visualisation<br>Semester 1 2022</p>
+    </footer>
 
-<br>
-<p><em><strong>From &nbsp&nbsp&nbsp - &nbsp&nbsp&nbsp&nbsp&nbsp to&nbsp&nbsp&nbsp&nbsp</em></strong></p>
-<p>
-<label for="membership"></label>
-	<select name="membership" id="vis3_year_s">
- 	<option value="2009" selected>2009</option>
- 	<option value="2010">2010</option>
- 	<option value="2011">2011</option>
- 	<option value="2012">2012</option>
- 	<option value="2013">2013</option>
-	<option value="2014">2014</option>
-	<option value="2015">2015</option>
-	<option value="2016">2016</option>
-	<option value="2017">2017</option>
+  </body>
 
-	<option value="2018">2018</option>
-	<option value="2019">2019</option>
-	<option value="2020">2020</option>
-	</select>
-	<select name="membership" id="vis3_year_e">
- 	<option value="2009">2009</option>
- 	<option value="2010">2010</option>
- 	<option value="2011">2011</option>
- 	<option value="2012">2012</option>
- 	<option value="2013">2013</option>
-	<option value="2014">2014</option>
-	<option value="2015">2015</option>
-	<option value="2016">2016</option>
-	<option value="2017">2017</option>
-
-	<option value="2018">2018</option>
-	<option value="2019">2019</option>
-	<option value="2020" selected>2020</option>
-	</select></p>
-
-
-
-
-<br>
-
-
-
-<p><strong><a href="#graph1" class="nextVis"> GRAPH 1 &rarr;</a></strong></p>
-
-   <p> <button type="button" id="vis3_go" onclick="vis3_goFilter()"><strong>APPLY</strong></button>    
-     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  <button type="button" id="vis3_reset" onclick="vis3_resetFilter()"><strong>RESET</strong></button>
-	</p>
-
-</div>
-	<p id="chart3"></p>
-	<footer>
-	<p>COS30045 Data Visualisation<br>Semester 1 2022</p>
-	</footer>
-
-</body>
 </html>
